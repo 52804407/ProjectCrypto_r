@@ -7,8 +7,8 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 
 #Function to obtain live marketcap from CoinMarketCap API, standard api_key is our, we suggest to create your own on coinmarketcap.com
-def market_cap(api_key = 5ceece0b-74a3-49ee-85a2-513efdf7539f):
-  url = 'https://pro-api.coinmarketcap.com'
+def market_cap(api_key = "5ceece0b-74a3-49ee-85a2-513efdf7539f"):
+  url = 'https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest'
   parameters = {
     'start':'1',
     'limit':'5000',
@@ -28,3 +28,5 @@ def market_cap(api_key = 5ceece0b-74a3-49ee-85a2-513efdf7539f):
     print(data)
   except (ConnectionError, Timeout, TooManyRedirects) as e:
     print(e)
+
+market_cap()
