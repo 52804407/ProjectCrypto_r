@@ -5,28 +5,54 @@ import matplotlib.pyplot as plt
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
+import configparser
+from dateutil import parser
+import pytz
 
-#Function to obtain live marketcap from CoinMarketCap API, standard api_key is our, we suggest to create your own on coinmarketcap.com
-def market_cap(api_key = "5ceece0b-74a3-49ee-85a2-513efdf7539f"):
-  url = 'https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest'
-  parameters = {
-    'start':'1',
-    'limit':'5000',
-    'convert':'USD'
-  }
-  headers = {
-    'Accepts': 'application/json',
-    'X-CMC_PRO_API_KEY': f'{api_key}',
-  }
+def get_info():
+    # Read the API key from the coinmarket.ini file
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    api_key = config['DEFAULT']['API_KEY']
 
-  session = Session()
-  session.headers.update(headers)
+    # Set up the request parameters and headers
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+    parameters = { 'slug': 'bitcoin', 'convert': 'USD' }
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': api_key
+    }
 
-  try:
+    # Send the request and retrieve the response
+    session = Session()
+    session.headers.update(headers)
     response = session.get(url, params=parameters)
-    data = json.loads(response.text)
-    print(data)
-  except (ConnectionError, Timeout, TooManyRedirects) as e:
-    print(e)
+    info = json.loads(response.text)
 
-market_cap()
+    # Extract the desired information from the response
+    data = info['data']['1']
+    name = data['name']
+    symbol = data['symbol']
+    rank = data['cmc_rank']
+    total_supply = data['total_supply']
+    circulating_supply = data['circulating_supply']
+    market_cap = data['quote']['USD']['market_cap']
+    price = data['quote']['USD']['price']
+    market_cap_dominance = data['quote']['USD']['market_cap_dominance']
+    percent_change_1h = data['quote']['USD']['percent_change_1h']
+    percent_change_24h = data['quote']['USD']['percent_change_24h']
+    volume_24h = data['quote']['USD']['volume_24h']
+    volume_change_24h = data['quote']['USD']['volume_change_24h']
+    timestamp = info['status']['timestamp']
+
+    # Convert the timestamp to a timezone-aware datetime object
+    timestamp_local = parser.parse(timestamp).astimezone(pytz.timezone('Turkey'))
+    
+
+    # Format the timestamp as desired
+    formatted_timestamp = timestamp_local.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Print the information
+    print(f'Name: {name}, Symbol: {symbol}, Price: {price:,.2f}, Percent change (1h): {percent_change_1h}, Percent change (24h): {percent_change_24h}, Total supply: {total_supply}, Circulating supply: {circulating_supply}, Market capitalization: {market_cap}, Market capitalization dominance: {market_cap_dominance}, Volume (24h): {volume_24h}, Volume change (24h): {volume_change_24h}, Timestamp: {formatted_timestamp}')
+
+get_info()
