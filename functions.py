@@ -9,7 +9,11 @@ import configparser
 from dateutil import parser
 import pytz
 
-def get_info():
+
+
+#Function to obtain cryptocurency marketcap in USD. Is ready to obtain more data, just change the return value 
+#Default slug is bitcoin with id 1
+def get_market_cap(slug ="bitcoin", id = 1):
     # Read the API key from the coinmarket.ini file
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -17,7 +21,7 @@ def get_info():
 
     # Set up the request parameters and headers
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
-    parameters = { 'slug': 'bitcoin', 'convert': 'USD' }
+    parameters = { 'slug': f'{slug}', 'convert': 'USD' }
     headers = {
         'Accepts': 'application/json',
         'X-CMC_PRO_API_KEY': api_key
@@ -30,7 +34,7 @@ def get_info():
     info = json.loads(response.text)
 
     # Extract the desired information from the response
-    data = info['data']['1']
+    data = info['data'][f'{id}']
     name = data['name']
     symbol = data['symbol']
     rank = data['cmc_rank']
@@ -52,7 +56,7 @@ def get_info():
     # Format the timestamp as desired
     formatted_timestamp = timestamp_local.strftime('%Y-%m-%d %H:%M:%S')
 
+    market_cap_dict = {symbol : market_cap}
     # Print the information
-    print(f'Name: {name}, Symbol: {symbol}, Price: {price:,.2f}, Percent change (1h): {percent_change_1h}, Percent change (24h): {percent_change_24h}, Total supply: {total_supply}, Circulating supply: {circulating_supply}, Market capitalization: {market_cap}, Market capitalization dominance: {market_cap_dominance}, Volume (24h): {volume_24h}, Volume change (24h): {volume_change_24h}, Timestamp: {formatted_timestamp}')
+    return print(market_cap_dict)
 
-get_info()
