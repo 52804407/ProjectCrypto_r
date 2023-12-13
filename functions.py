@@ -11,10 +11,11 @@ import pytz
 
 
 
-#Function to obtain cryptocurency marketcap in USD. Is ready to obtain more data, just change the return value 
-#Default slug is bitcoin with id 1
-def get_market_cap(slug ="bitcoin", id = 1):
-    # Read the API key from the coinmarket.ini file
+
+
+
+def get_market_cap(slug ="bitcoin", id = 1): #Function that obtains cryptocurency market_cap in USD.
+    # Read the API key from the config.ini file
     config = configparser.ConfigParser()
     config.read('config.ini')
     api_key = config['DEFAULT']['API_KEY']
@@ -26,7 +27,6 @@ def get_market_cap(slug ="bitcoin", id = 1):
         'Accepts': 'application/json',
         'X-CMC_PRO_API_KEY': api_key
     }
-
     # Send the request and retrieve the response
     session = Session()
     session.headers.update(headers)
@@ -35,28 +35,46 @@ def get_market_cap(slug ="bitcoin", id = 1):
 
     # Extract the desired information from the response
     data = info['data'][f'{id}']
-    name = data['name']
     symbol = data['symbol']
-    rank = data['cmc_rank']
-    total_supply = data['total_supply']
-    circulating_supply = data['circulating_supply']
     market_cap = data['quote']['USD']['market_cap']
-    price = data['quote']['USD']['price']
-    market_cap_dominance = data['quote']['USD']['market_cap_dominance']
-    percent_change_1h = data['quote']['USD']['percent_change_1h']
-    percent_change_24h = data['quote']['USD']['percent_change_24h']
-    volume_24h = data['quote']['USD']['volume_24h']
-    volume_change_24h = data['quote']['USD']['volume_change_24h']
-    timestamp = info['status']['timestamp']
-
-    # Convert the timestamp to a timezone-aware datetime object
-    timestamp_local = parser.parse(timestamp).astimezone(pytz.timezone('Turkey'))
-    
-
-    # Format the timestamp as desired
-    formatted_timestamp = timestamp_local.strftime('%Y-%m-%d %H:%M:%S')
-
     market_cap_dict = {symbol : market_cap}
-    # Print the information
     return print(market_cap_dict)
+
+
+
+
+
+def get_crypto_ids(slug = 'bitcoin'): #Function that obtains ID for any slug
+    # Read the API key from the config.ini file
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    api_key = config['DEFAULT']['API_KEY']
+
+    # Set up the request parameters and headers
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map'
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': api_key
+    }
+    # Send the request and retrieve the response
+    session = Session()
+    session.headers.update(headers)
+    response = session.get(url)
+    info = json.loads(response.text)
+
+    # Extract the desired information from the response
+    crypto_data = info['data']
+
+    # Process the crypto data
+    crypto_slugs_ids = {}
+    for crypto in crypto_data:
+        crypto_id = crypto['id']
+        crypto_name = crypto['name']
+        crypto_slug = crypto['slug']
+        crypto_slugs_ids[crypto_slug] = crypto_id
+
+    # Return the dictionary with slugs as keys and IDs as values
+    return print(crypto_slugs_ids[f'{slug}'])
+
+
 
