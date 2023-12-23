@@ -122,6 +122,7 @@ def get_crypto_symbol(slug = 'bitcoin'):  #similar to game crypto ids. Finds sym
 
 
 def portfolio_manager(*currencies): #Main function that calculates how should be porfolio managed in % based on the crypto market_cap
+
     # Ensure there are at most 5 currencies
     if len(currencies) > 5:
         raise ValueError("Up to 5 currencies are allowed")
@@ -134,6 +135,8 @@ def portfolio_manager(*currencies): #Main function that calculates how should be
             market_cap_dict = get_market_cap(slug=currency, id=crypto_id)
             crypto_symbol = get_crypto_symbol(slug = currency)
             market_caps[currency] = market_cap_dict[crypto_symbol]  
+
+            
         except ValueError as e:
             print(e)
 
