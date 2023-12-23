@@ -15,7 +15,8 @@ import argparse
 from functions import (portfolio_manager, 
                         get_crypto_ids,
                         get_crypto_symbol,
-                        get_market_cap)
+                        get_market_cap,
+                        get_crypto_slugs)
 
 
 # connecting to config.ini
