@@ -179,4 +179,4 @@ def get_crypto_slugs(): #Function that prints all available crypto slugs
         crypto_slugs.append(crypto_slug) 
     return crypto_slugs
 
-print(get_crypto_slugs())
+
