@@ -30,18 +30,18 @@ default_config = config['DEFAULT']
 # Main function
 if __name__ == "__main__":
     
-    print("Enter up to 5 cryptocurrencies for your portfolio with space in between (press Enter to skip):")
-    print("Example: bitcoin ethereum solana")
-    user_input = input().strip().split()
-    
-
+    print("FOR LIST OF CRYPTO SLUGS USE:  python main.py -l ")
+    print("Enter up to 5 crypto slugs (Example: bitcoin ethereum solana) (press Enter to skip and use default portfolio):")
+    user_input = input().strip()
+    # Replace non-alphanumeric characters with space
+    user_input = ''.join(char if char.isalnum() or char.isspace() else ' ' for char in user_input)
+    # Split the input into a list of cryptocurrencies
+    user_input = user_input.split()
 
     # Create ArgumentParser object
     parser = argparse.ArgumentParser(description='Create a portfolio based on cryptocurrency market caps.')
-
     parser.add_argument('currencies', metavar='currency', type=str, nargs='*', help='Cryptocurrencies for the portfolio')
     parser.add_argument('-l', '--list', action='store_true', help='List all available crypto slugs')
-    
     args = parser.parse_args()
 
     if args.list:
