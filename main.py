@@ -12,7 +12,7 @@ import pytz
 import argparse
 
 #Importing local functions from functions.py
-from functions import (portfolio_manager, 
+from api_functions import (portfolio_manager, 
                         get_crypto_ids,
                         get_crypto_symbol,
                         get_market_cap,
