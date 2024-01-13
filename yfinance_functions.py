@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 
 
-#Function to download daily close price data for the specified tickers and time period:
-def get_daily_close_price_data(currencies):
+#Function to download daily close price data
+def get_daily_close_price_data(*currencies):
     if len(currencies)>1:
         tickers = yf.Tickers(currencies)
         data = tickers.history()
@@ -22,4 +22,12 @@ def get_daily_close_price_data(currencies):
 
 currencies = ["BTC-USD","ETH-USD"]
 close_data = get_daily_close_price_data(currencies)
-print(close_data)
+#print(close_data)
+
+#Function calculating daily returns
+def calculate_daily_returns(*currencies):
+    daily_returns = get_daily_close_price_data(currencies)/get_daily_close_price_data(currencies).shift(1)
+    return daily_returns
+
+daily_returns = calculate_daily_returns(currencies)
+print(daily_returns)
