@@ -18,6 +18,9 @@ from api_functions import (portfolio_manager,
                         get_market_cap,
                         get_crypto_slugs)
 
+#from yfinance_functions import (get_daily_close_price_data,
+#                                calculate_daily_returns)
+
 
 # connecting to config.ini
 import configparser
@@ -64,5 +67,18 @@ if __name__ == "__main__":
 
     # Print the resulting portfolio
     print("\nYour portfolio percentages:")
+    labels = []
+    sizes = []
     for currency, percentage in portfolio_percentages.items():
         print(f"{currency}: {percentage:.2f}%")
+        labels.append(currency)
+        sizes.append(percentage)
+    
+    # Pie chart of resulting portfolio
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+    #ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.title("Crypto Portfolio Distribution")
+    plt.show()
+
