@@ -22,7 +22,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 default_config = config['DEFAULT']
 
-print("Enter up to 5 crypto tickers (Example: BTC-USD ETH-USD SOL-USD) (press Enter to skip and use default portfolio):")
+print("Enter up to 5 crypto tickers (Example: bitcoin ethereum solana) (press Enter to skip and use default portfolio):")
 user_input = input().strip()
 # Replace non-alphanumeric characters with space
 user_input = ''.join(char if char.isalnum() or char.isspace() else ' ' for char in user_input)
@@ -49,6 +49,21 @@ if not args.currencies:
         currencies = ['BTC-USD', 'ETH-USD', 'SOL-USD']
 else:
     currencies = args.currencies
+
+crypto_mapping = {
+    "bitcoin": "BTC-USD",
+    "ethereum": "ETH-USD",
+    "solana": "SOL-USD",
+    "cardano": "ADA-USD",
+    "binancecoin": "BNB-USD"
+}
+
+#Function to convert user input (e.g. bitcoin) to ticker symbols (e.g. BTC-USD)
+def convert_to_tickers(user_input, mapping):
+    return [mapping[currency.lower()] for currency in user_input if currency.lower() in mapping]
+
+currencies = convert_to_tickers(currencies, crypto_mapping)
+
 
 # Call the portfolio_manager function with user-selected cryptocurrencies
 portfolio_percentages = portfolio_manager(*currencies)
