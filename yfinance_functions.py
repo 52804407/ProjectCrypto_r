@@ -75,7 +75,7 @@ def portfolio_manager(*currencies):
     #Minimize the portfolio variance using SLSQP
     opt_results = minimize(portfolio_variance, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
     #Save percentages in a dictionary for each currency
-    percentages = dict(zip(currencies, opt_results.x))
+    percentages = dict(zip(currencies, opt_results.x*100))
 
     return percentages
 

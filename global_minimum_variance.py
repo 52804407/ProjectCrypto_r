@@ -46,7 +46,7 @@ args = parser.parse_args()
 if not args.currencies:
     currencies = user_input
     if not currencies:
-        currencies = ['BTC-USD', 'ETH-USD', 'SOL-USD']
+        currencies = ['bitcoin', 'ethereum', 'solana']
 else:
     currencies = args.currencies
 
@@ -109,11 +109,17 @@ def convert_to_tickers(user_input, mapping):
 
 currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
+#Inverse function (e.g. BTC-USD -> bitcoin)
+def convert_to_names(mapping):
+    return {v: k for k, v in mapping.items()}
 
-# Call the portfolio_manager function with user-selected cryptocurrencies
+#Call the portfolio_manager function with user-selected cryptocurrencies
 portfolio_percentages = portfolio_manager(*currencies)
-#print(portfolio_percentages)
-# Print the resulting portfolio
+
+#Convert tickers back to names
+portfolio_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
+
+#Print the resulting portfolio
 print("\nYour portfolio percentages:")
 labels = []
 sizes = []
@@ -122,10 +128,10 @@ for currency, percentage in portfolio_percentages.items():
     labels.append(currency)
     sizes.append(percentage)
     
-# Pie chart of resulting portfolio
+#Pie chart of resulting portfolio
 fig1, ax1 = plt.subplots()
 ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+ax1.axis('equal')#Equal aspect ratio ensures that pie is drawn as a circle.
 
-plt.title("Crypto Portfolio Distribution")
+plt.title("GMV Portfolio Distribution")
 plt.show()
