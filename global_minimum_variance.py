@@ -50,19 +50,39 @@ if not args.currencies:
 else:
     currencies = args.currencies
 
-crypto_mapping = {
+crypto_mapping_top50 = {
     "bitcoin": "BTC-USD",
     "ethereum": "ETH-USD",
+    "tether": "USDT-USD",
+    "binancecoin": "BNB-USD",
     "solana": "SOL-USD",
+    "xrp": "XRP-USD",
+    "usdcoin": "USDC-USD",
+    "lidostakedeth": "STETH-USD",
     "cardano": "ADA-USD",
-    "binancecoin": "BNB-USD"
+    "dogecoin": "DOGE-USD",
+    "avalanche": "AVAX-USD",
+    "bitbegin": "BRIT-USD",
+    "tron": "TRX-USD",
+    "wrappedtron": "WTRX-USD",
+    "chainlink": "LINK-USD",
+    "polkadot": "DOT-USD",
+    "toncoin": "TON11419-USD",
+    "polygon": "MATIC-USD",
+    "wrappedbitcoin": "WBTC-USD",
+    "shibainu": "SHIB-USD",
+    "dai": "DAI-USD",
+    "litecoin": "LTC-USD",
+    "internetcomputer": "ICT-USD",
+    "bitcoincash": "BCH-USD",
+    "leo": "LEO-USD"
 }
 
 #Function to convert user input (e.g. bitcoin) to ticker symbols (e.g. BTC-USD)
 def convert_to_tickers(user_input, mapping):
     return [mapping[currency.lower()] for currency in user_input if currency.lower() in mapping]
 
-currencies = convert_to_tickers(currencies, crypto_mapping)
+currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
 
 # Call the portfolio_manager function with user-selected cryptocurrencies
