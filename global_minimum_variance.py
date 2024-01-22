@@ -112,20 +112,20 @@ currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
 # Call the portfolio_manager function with user-selected cryptocurrencies
 portfolio_percentages = portfolio_manager(*currencies)
-print(portfolio_percentages)
+#print(portfolio_percentages)
 # Print the resulting portfolio
-#print("\nYour portfolio percentages:")
-#labels = []
-#sizes = []
-#for currency, percentage in portfolio_percentages.items():
-#    print(f"{currency}: {percentage:.2f}%")
-#    labels.append(currency)
-#    sizes.append(percentage)
+print("\nYour portfolio percentages:")
+labels = []
+sizes = []
+for currency, percentage in portfolio_percentages.items():
+    print(f"{currency}: {percentage:.2f}%")
+    labels.append(currency)
+    sizes.append(percentage)
     
 # Pie chart of resulting portfolio
-#fig1, ax1 = plt.subplots()
-#ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-#ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+fig1, ax1 = plt.subplots()
+ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-#plt.title("Crypto Portfolio Distribution")
-#plt.show()
+plt.title("Crypto Portfolio Distribution")
+plt.show()
