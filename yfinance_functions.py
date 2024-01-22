@@ -2,6 +2,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize
 
 #Function to download daily close price data
 def get_daily_close_price_data(*currencies):
@@ -37,8 +38,45 @@ def calculate_daily_returns(*currencies):
         # Calculate the daily returns
         daily_returns[currency] = close_data[currency] / close_data[currency].shift(1) - 1
 
-    return daily_returns
+    return pd.DataFrame(daily_returns)
 
 
-currencies = ["BTC-USD","ETH-USD"]
-print(calculate_daily_returns(*currencies)["BTC-USD"])
+#currencies = ["BTC-USD","ETH-USD","ADA-USD","SOL-USD","BNB-USD"]
+#print(calculate_daily_returns(*currencies)["BTC-USD"])
+
+
+# Function that calculates how should be porfolio managed in % based on GMV
+def portfolio_manager(*currencies): 
+    # Ensure there are at most 5 currencies
+    if len(currencies) > 5:
+        raise ValueError("Up to 5 currencies are allowed")
+    #Insert return from calculate_daily_returns function
+    daily_returns = calculate_daily_returns(*currencies)
+    #Calculate the cov matrix
+    daily_returns_cov_matrix = daily_returns.cov()
+
+    #Constraint functions for optimization
+    def portfolio_variance(weights):
+        return weights.T @ daily_returns_cov_matrix @ weights
+
+    def check_sum(weights):
+        return np.sum(weights) - 1
+
+    #We need to specify an initial guess (equal weighted portfolio)
+    init_guess = []
+    for i in range(len(currencies)):
+        init_guess.append(1 / len(currencies))
+
+    #Limit each percentage to be between 0 and 1
+    bounds = tuple((0, 1) for i in range(len(currencies)))
+    #Set constraints so that percentages sum to 1 
+    constraints = ({'type': 'eq', 'fun': check_sum})
+
+    #Minimize the portfolio variance using SLSQP
+    opt_results = minimize(portfolio_variance, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
+    #Save percentages in a dictionary for each currency
+    percentages = dict(zip(currencies, opt_results.x))
+
+    return percentages
+
+#print(portfolio_manager(*currencies))
