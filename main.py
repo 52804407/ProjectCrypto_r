@@ -56,6 +56,6 @@ if __name__ == "__main__":
     else:
         portfolio_name = "global_minimum_variance"
 
-    subprocess.run(["python", f"{portfolio_name}.py", "-l"])
+    subprocess.run(["python", f"{portfolio_name}.py"])
 
     
