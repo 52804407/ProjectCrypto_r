@@ -75,7 +75,32 @@ crypto_mapping_top50 = {
     "litecoin": "LTC-USD",
     "internetcomputer": "ICT-USD",
     "bitcoincash": "BCH-USD",
-    "leo": "LEO-USD"
+    "leo": "LEO-USD",
+    "uniswap": "UNI7083-USD",
+    "cosmos": "ATOM-USD",
+    "ethereumclassic": "ETC-USD",
+    "stellar": "XLM-USD",
+    "okb": "OKB-USD",
+    "injective": "INJ-USD",
+    "optimism": "OP-USD",
+    "monero": "XMR-USD",
+    "near": "NEAR-USD",
+    "aptos": "APT21794-USD",
+    "firstdigitalusd": "FDUSD-USD",
+    "filecoin": "FIL-USD",
+    "wrappedeos": "WEOS-USD",
+    "celestia": "TIA22861-USD",
+    "lidodao": "LDO-USD",
+    "hedera": "HBAR-USD",
+    "wrappedhbar": "WHBAR-USD",
+    "immutable": "IMX10603-USD",
+    "kaspa": "KAS-USD",
+    "arbitrum": "ARB11841-USD",
+    "bitcoinbep2": "BTCB-USD",
+    "mantle": "MNT27075-USD",
+    "stacks": "STX4847-USD",
+    "cronos": "CRO-USD",
+    "vechain": "VET-USD"
 }
 
 #Function to convert user input (e.g. bitcoin) to ticker symbols (e.g. BTC-USD)
