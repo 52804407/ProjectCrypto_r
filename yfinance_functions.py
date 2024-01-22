@@ -29,5 +29,3 @@ def calculate_daily_returns(*currencies):
     daily_returns = get_daily_close_price_data(currencies)/get_daily_close_price_data(currencies).shift(1)
     return daily_returns
 
-daily_returns = calculate_daily_returns(currencies)
-print(daily_returns)
