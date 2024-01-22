@@ -10,6 +10,7 @@ import json
 from dateutil import parser
 import pytz
 import argparse
+import subprocess
 
 #Importing local functions from functions.py
 from api_functions import (portfolio_manager, 
@@ -29,56 +30,32 @@ config.read('config.ini')
 default_config = config['DEFAULT']
 
 
+def get_portfolio_choice():
+    print("Choose a portfolio:")
+    print("1. Value Weighted")
+    print("2. Equal Weighted")
+    print("3. Global Minimum Variance")
 
-# Main function
+    while True:
+        try:
+            choice = int(input("Enter the number of your choice (1-3): "))
+            if 1 <= choice <= 3:
+                return choice
+            else:
+                print("Invalid choice. Please enter a number between 1 and 3.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+
 if __name__ == "__main__":
-    
-    print("FOR LIST OF CRYPTO SLUGS USE:  python main.py -l ")
-    print("Enter up to 5 crypto slugs (Example: bitcoin ethereum solana) (press Enter to skip and use default portfolio):")
-    user_input = input().strip()
-    # Replace non-alphanumeric characters with space
-    user_input = ''.join(char if char.isalnum() or char.isspace() else ' ' for char in user_input)
-    # Split the input into a list of cryptocurrencies
-    user_input = user_input.split()
+    portfolio_choice = get_portfolio_choice()
 
-    # Create ArgumentParser object
-    parser = argparse.ArgumentParser(description='Create a portfolio based on cryptocurrency market caps.')
-    parser.add_argument('currencies', metavar='currency', type=str, nargs='*', help='Cryptocurrencies for the portfolio')
-    parser.add_argument('-l', '--list', action='store_true', help='List all available crypto slugs')
-    args = parser.parse_args()
-
-    if args.list:
-        # If the user wants to list all crypto slugs, call the get_crypto_slugs function
-        crypto_slugs = get_crypto_slugs()
-        print("Available crypto slugs:")
-        for slug in crypto_slugs:
-            print(slug)
-
-    # If no input provided, use user input or defaults
-    if not args.currencies:
-        currencies = user_input
-        if not currencies:
-            currencies = ['bitcoin', 'ethereum', 'solana']
+    if portfolio_choice == 1:
+        portfolio_name = "value_weighted"
+    elif portfolio_choice == 2:
+        portfolio_name = "equal_weighted"
     else:
-        currencies = args.currencies
+        portfolio_name = "global_minimum_variance"
 
-    # Call the portfolio_manager function with user-selected cryptocurrencies
-    portfolio_percentages = portfolio_manager(*currencies)
+    subprocess.run(["python", f"{portfolio_name}.py", "-l"])
 
-    # Print the resulting portfolio
-    print("\nYour portfolio percentages:")
-    labels = []
-    sizes = []
-    for currency, percentage in portfolio_percentages.items():
-        print(f"{currency}: {percentage:.2f}%")
-        labels.append(currency)
-        sizes.append(percentage)
     
-    # Pie chart of resulting portfolio
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-    #ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-    plt.title("Crypto Portfolio Distribution")
-    plt.show()
-
