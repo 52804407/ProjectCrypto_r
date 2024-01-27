@@ -50,73 +50,18 @@ if not args.currencies:
 else:
     currencies = args.currencies
 
-crypto_mapping_top50 = {
-    "bitcoin": "BTC-USD",
-    "ethereum": "ETH-USD",
-    "tether": "USDT-USD",
-    "binancecoin": "BNB-USD",
-    "solana": "SOL-USD",
-    "xrp": "XRP-USD",
-    "usdcoin": "USDC-USD",
-    "lidostakedeth": "STETH-USD",
-    "cardano": "ADA-USD",
-    "dogecoin": "DOGE-USD",
-    "avalanche": "AVAX-USD",
-    "bitbegin": "BRIT-USD",
-    "tron": "TRX-USD",
-    "wrappedtron": "WTRX-USD",
-    "chainlink": "LINK-USD",
-    "polkadot": "DOT-USD",
-    "toncoin": "TON11419-USD",
-    "polygon": "MATIC-USD",
-    "wrappedbitcoin": "WBTC-USD",
-    "shibainu": "SHIB-USD",
-    "dai": "DAI-USD",
-    "litecoin": "LTC-USD",
-    "internetcomputer": "ICT-USD",
-    "bitcoincash": "BCH-USD",
-    "leo": "LEO-USD",
-    "uniswap": "UNI7083-USD",
-    "cosmos": "ATOM-USD",
-    "ethereumclassic": "ETC-USD",
-    "stellar": "XLM-USD",
-    "okb": "OKB-USD",
-    "injective": "INJ-USD",
-    "optimism": "OP-USD",
-    "monero": "XMR-USD",
-    "near": "NEAR-USD",
-    "aptos": "APT21794-USD",
-    "firstdigitalusd": "FDUSD-USD",
-    "filecoin": "FIL-USD",
-    "wrappedeos": "WEOS-USD",
-    "celestia": "TIA22861-USD",
-    "lidodao": "LDO-USD",
-    "hedera": "HBAR-USD",
-    "wrappedhbar": "WHBAR-USD",
-    "immutable": "IMX10603-USD",
-    "kaspa": "KAS-USD",
-    "arbitrum": "ARB11841-USD",
-    "bitcoinbep2": "BTCB-USD",
-    "mantle": "MNT27075-USD",
-    "stacks": "STX4847-USD",
-    "cronos": "CRO-USD",
-    "vechain": "VET-USD"
-}
+#Import mapping tool
+from slugs_mapping_tool import crypto_mapping_top50
 
-#Function to convert user input (e.g. bitcoin) to ticker symbols (e.g. BTC-USD)
-def convert_to_tickers(user_input, mapping):
-    return [mapping[currency.lower()] for currency in user_input if currency.lower() in mapping]
-
+#Convert user input to ticker symbol
+from slugs_mapping_tool import convert_to_tickers
 currencies = convert_to_tickers(currencies, crypto_mapping_top50)
-
-#Inverse function (e.g. BTC-USD -> bitcoin)
-def convert_to_names(mapping):
-    return {v: k for k, v in mapping.items()}
 
 #Call the portfolio_manager function with user-selected cryptocurrencies
 portfolio_percentages = portfolio_manager(*currencies)
 
 #Convert tickers back to names
+from slugs_mapping_tool import convert_to_names
 portfolio_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
 
 #Print the resulting portfolio
