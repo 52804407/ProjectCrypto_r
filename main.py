@@ -12,17 +12,6 @@ import pytz
 import argparse
 import subprocess
 
-#Importing local functions from functions.py
-from api_functions import (portfolio_manager, 
-                        get_crypto_ids,
-                        get_crypto_symbol,
-                        get_market_cap,
-                        get_crypto_slugs)
-
-#from yfinance_functions import (get_daily_close_price_data,
-#                                calculate_daily_returns)
-
-
 # connecting to config.ini
 import configparser
 config = configparser.ConfigParser()
