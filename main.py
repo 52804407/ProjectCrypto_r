@@ -42,7 +42,7 @@ if __name__ == "__main__":
         portfolio_name = "value_weighted"
     elif portfolio_choice == 2:
         portfolio_name = "equal_weighted"
-    else:
+    elif portfolio_choice == 3:
         portfolio_name = "global_minimum_variance"
 
     subprocess.run(["python", f"{portfolio_name}.py"])
