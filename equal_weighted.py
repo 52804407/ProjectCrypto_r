@@ -29,6 +29,9 @@ parser.add_argument('currencies', metavar='currency', type=str, nargs='*', help=
 parser.add_argument('-l', '--list', action='store_true', help='List all available crypto slugs')
 args = parser.parse_args()
 
+
+from api_functions import (get_crypto_slugs)
+
 if args.list:
     #If the user wants to list all crypto slugs, call the get_crypto_slugs function
     crypto_slugs = get_crypto_slugs()
