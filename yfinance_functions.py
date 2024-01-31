@@ -46,7 +46,7 @@ def calculate_daily_returns(*currencies):
 
 
 # Function that calculates how should be porfolio managed in % based on GMV
-def portfolio_manager(*currencies): 
+def portfolio_manager2(*currencies): 
     # Ensure there are at most 5 currencies
     if len(currencies) > 5:
         raise ValueError("Up to 5 currencies are allowed")
