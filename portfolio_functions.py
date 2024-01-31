@@ -14,6 +14,8 @@ from slugs_mapping_tool import (crypto_mapping_top50,
                                 convert_to_tickers,
                                 convert_to_names)
 
+from yfinance_functions import (portfolio_manager2)
+
 # Equal_weighted portfolio
 def calculate_equal_weights(*currencies):
     percentages = {}
@@ -54,12 +56,10 @@ def calculate_value_weights(*currencies):
 #convert user input to ticker symbol
 def calculate_global_minimum_variance(*currencies):
 
-
-    #Call the portfolio_manager function with user-selected cryptocurrencies
-    portfolio_percentages = portfolio_manager(*currencies)
-
     currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
+    #Call the portfolio_manager function with user-selected cryptocurrencies
+    portfolio_percentages = portfolio_manager2(*currencies)
     #Convert tickers back to names
-    percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
-    return percentages
+    portfolio_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
+    return portfolio_percentages
