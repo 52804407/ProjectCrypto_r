@@ -12,6 +12,7 @@ import subprocess
 import configparser
 import click
 import re
+from datetime import datetime, timedelta
 
 from api_functions import (get_crypto_slugs,
                            portfolio_manager,
@@ -90,7 +91,7 @@ def main(currencies, list_currencies, start_date):
         if not currencies:
             currencies = ['bitcoin', 'ethereum', 'solana']
 
-        print("Enter a start date in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y) or press Enter to use default (1D):")
+    print("Enter a start date in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y) or press Enter to use default (1D):")
     start_date_input = input().strip().upper()
     if not start_date_input:
         start_date = '1D'  # Default value if user skips
@@ -130,7 +131,67 @@ def main(currencies, list_currencies, start_date):
     plt.title("Value-Weighted Portfolio Distribution")
     plt.show()
 
+    def get_start_date_from_period(period):
+        unit = period[-1]
+        quantity = int(period[:-1])
+        if unit == 'D':
+            return datetime.now() - timedelta(days=quantity)
+        elif unit == 'W':
+            return datetime.now() - timedelta(weeks=quantity)
+        elif unit == 'M':
+            return datetime.now() - timedelta(days=30*quantity)  # Approximation
+        elif unit == 'Y':
+            return datetime.now() - timedelta(days=365*quantity)  # Approximation
 
+# Function to fetch historical data and calculate returns
+    def calculate_portfolio_returns(portfolio_percentages, start_date, initial_investment=1000):
+        start_date_actual = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
+        end_date_actual = datetime.now().strftime('%Y-%m-%d')
+        
+        portfolio_returns = pd.DataFrame()
+        
+        for currency, percentage in portfolio_percentages.items():
+            # Append '-USD' to each currency symbol
+            symbol = get_crypto_symbol(currency) + '-USD'
+            try:
+                data = yf.download(symbol, start=start_date_actual, end=end_date_actual)
+                
+                # Calculate daily returns
+                daily_returns = data['Adj Close'].pct_change()
+                
+                # Calculate weighted returns
+                weight = percentage / 100
+                portfolio_returns[currency] = daily_returns * weight
+            except Exception as e:
+                print(f"Failed to download {symbol}: {str(e)}")
+        
+        if not portfolio_returns.empty:
+            # Calculate portfolio daily returns
+            portfolio_daily_returns = portfolio_returns.sum(axis=1)
+            
+            # Calculate cumulative returns and normalize starting value to 100%
+            cumulative_returns = (1 + portfolio_daily_returns).cumprod() * 100
+            
+            # Plotting
+            plt.figure(figsize=(10, 6))
+            plt.plot(cumulative_returns.index, cumulative_returns, label='Portfolio Performance')
+            plt.title('Portfolio Performance Over Time')
+            plt.xlabel('Date')
+            plt.ylabel('Performance (%)')
+            plt.legend()
+            plt.grid(True)
+            plt.show()
+            
+            # Calculate and print the portfolio difference in %
+            starting_value = 100  # Starting at 100%
+            ending_value = cumulative_returns.iloc[-1]  # Last value in the series
+            performance_difference = ending_value - starting_value
+            print(f"Portfolio performance from start to end date: {performance_difference:.2f}% difference.")
+        else:
+            print("No data available to plot.")
+
+
+    calculate_portfolio_returns(portfolio_percentages, start_date, 1000)
 
 if __name__ == "__main__":
     main()
