@@ -13,7 +13,7 @@ import argparse
 #Importing local functions from yfinance_functions.py
 from yfinance_functions import (get_daily_close_price_data, 
                         calculate_daily_returns,
-                        portfolio_manager)
+                        portfolio_manager2)
 
 
 #Connecting to config.ini
@@ -59,7 +59,7 @@ from slugs_mapping_tool import convert_to_tickers
 currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
 #Call the portfolio_manager function with user-selected cryptocurrencies
-portfolio_percentages = portfolio_manager(*currencies)
+portfolio_percentages = portfolio_manager2(*currencies)
 
 #Convert tickers back to names
 from slugs_mapping_tool import convert_to_names
