@@ -53,10 +53,12 @@ def portfolio_manager_GMV(*currencies):
     def check_sum(weights):
         return np.sum(weights) - 1
 
-    #We need to specify an initial guess (equal weighted portfolio)
+    ##We need to specify an initial guess (equal weighted portfolio)
     init_guess = []
     for i in range(len(currencies)):
         init_guess.append(1 / len(currencies))
+    #init_guess = [0.5 / (len(currencies) - 1) for _ in range(len(currencies) - 1)] + [0.5]
+
 
     #Limit each percentage to be between 0 and 1
     bounds = tuple((0, 1) for i in range(len(currencies)))
@@ -69,3 +71,6 @@ def portfolio_manager_GMV(*currencies):
     percentages = dict(zip(currencies, opt_results.x*100))
 
     return percentages
+#currencies = ["BTC-USD", "ETH-USD", "SOL-USD", "BNB-USD", "ADA-USD"]
+#print(portfolio_manager_GMV(*currencies))
+#print(calculate_daily_returns(*currencies))

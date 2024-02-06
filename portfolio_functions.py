@@ -67,4 +67,5 @@ def calculate_global_minimum_variance(*currencies):
     #Convert tickers back to names
     GMV_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in GMV_percentages.items()}
     return GMV_percentages
-
+currencies = ["bitcoin", "ethereum"]
+print(calculate_global_minimum_variance(*currencies))
