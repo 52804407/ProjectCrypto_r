@@ -15,8 +15,8 @@ from slugs_mapping_tool import (crypto_mapping_top50,
                                 convert_to_names)
 
 from yfinance_functions import (calculate_daily_returns,
-                                get_daily_close_price_data,
-                                portfolio_manager2)
+                                #get_daily_close_price_data,
+                                portfolio_manager_GMV)
 
 # Equal_weighted portfolio
 def calculate_equal_weights(*currencies):
@@ -62,16 +62,9 @@ def calculate_global_minimum_variance(*currencies):
 
     #Call the portfolio_manager function with user-selected cryptocurrencies
     #portfolio_percentages = portfolio_manager2(*currencies)
-    close_data = pd.DataFrame()
-    daily_returns = pd.DataFrame()
-    for currency in currencies:
-        ticker = yf.Ticker(currency)
-        close_data[currency] = ticker.history()["Close"]
-        daily_returns[currency] = close_data[currency] / close_data[currency].shift(1) - 1
-    return daily_returns
-    
-currencies = ["bitcoin", "cardano", "ethereum"]
-print(calculate_global_minimum_variance(*currencies))
+    #daily_returns = calculate_daily_returns(*currencies)
+    GMV_percentages = portfolio_manager_GMV(*currencies)
     #Convert tickers back to names
-    #portfolio_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
-    #return portfolio_percentages
+    GMV_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in GMV_percentages.items()}
+    return GMV_percentages
+

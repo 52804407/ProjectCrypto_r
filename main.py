@@ -27,8 +27,8 @@ from portfolio_functions import (calculate_equal_weights,
                                  calculate_value_weights)
 
 from yfinance_functions import (calculate_daily_returns,
-                                get_daily_close_price_data,
-                                portfolio_manager2)
+                                #get_daily_close_price_data,
+                                portfolio_manager_GMV)
 
 # Enhanced validation function for start_date
 def validate_start_date(ctx, param, value):

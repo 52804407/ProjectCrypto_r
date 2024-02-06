@@ -5,48 +5,39 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
 #Function to download daily close price data
-def get_daily_close_price_data(*currencies):
-    if len(currencies) > 5:
-        raise ValueError("Up to 5 currencies are allowed")
-    elif len(currencies) > 1:
-        # Initialize a dictionary to hold close data for each currency
-        close_data = {}
-        for currency in currencies:
-            ticker = yf.Ticker(currency)
-            data = ticker.history()
-            close_data[currency] = data["Close"]
-    elif len(currencies) == 1:
-        ticker = yf.Ticker(currencies[0])
-        data = ticker.history()
-        close_data = {currencies[0]: data["Close"]}
-    return close_data
+#def get_daily_close_price_data(*currencies):
+#    if len(currencies) > 5:
+#        raise ValueError("Up to 5 currencies are allowed")
+#    elif len(currencies) > 1:
+#        # Initialize a dictionary to hold close data for each currency
+#        close_data = {}
+#        for currency in currencies:
+#            ticker = yf.Ticker(currency)
+#            data = ticker.history()
+#            close_data[currency] = data["Close"]
+#    elif len(currencies) == 1:
+#        ticker = yf.Ticker(currencies[0])
+#        data = ticker.history()
+#        close_data = {currencies[0]: data["Close"]}
+#    return close_data
 
 #Function calculating daily returns
 def calculate_daily_returns(*currencies):
-    # Get the close price data
-    close_data = get_daily_close_price_data(*currencies)
-    
-    # Initialize a dictionary to hold daily returns for each currency
-    daily_returns = {}
-
-    # Calculate daily returns for each currency
+    close_data = pd.DataFrame()
+    daily_returns = pd.DataFrame()
     for currency in currencies:
-        # Avoid division by zero and cases where there's no previous day data
-        if close_data[currency].empty or close_data[currency].shape[0] < 2:
-            continue
-        
-        # Calculate the daily returns
+        ticker = yf.Ticker(currency)
+        close_data[currency] = ticker.history()["Close"]
         daily_returns[currency] = close_data[currency] / close_data[currency].shift(1) - 1
+    return daily_returns
 
-    return pd.DataFrame(daily_returns)
 
 
-#currencies = ["BTC-USD","ETH-USD","ADA-USD","SOL-USD","BNB-USD"]
 #print(calculate_daily_returns(*currencies)["BTC-USD"])
 
 
 # Function that calculates how should be porfolio managed in % based on GMV
-def portfolio_manager2(*currencies): 
+def portfolio_manager_GMV(*currencies): 
     # Ensure there are at most 5 currencies
     if len(currencies) > 5:
         raise ValueError("Up to 5 currencies are allowed")
@@ -55,7 +46,7 @@ def portfolio_manager2(*currencies):
     #Calculate the cov matrix
     daily_returns_cov_matrix = daily_returns.cov()
 
-    #Constraint functions for optimization
+    ##Constraint functions for optimization
     def portfolio_variance(weights):
         return weights.T @ daily_returns_cov_matrix @ weights
 
@@ -78,5 +69,3 @@ def portfolio_manager2(*currencies):
     percentages = dict(zip(currencies, opt_results.x*100))
 
     return percentages
-
-#print(portfolio_manager(*currencies))
