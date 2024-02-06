@@ -61,7 +61,17 @@ def calculate_global_minimum_variance(*currencies):
     currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
     #Call the portfolio_manager function with user-selected cryptocurrencies
-    portfolio_percentages = portfolio_manager2(*currencies)
+    #portfolio_percentages = portfolio_manager2(*currencies)
+    close_data = pd.DataFrame()
+    daily_returns = pd.DataFrame()
+    for currency in currencies:
+        ticker = yf.Ticker(currency)
+        close_data[currency] = ticker.history()["Close"]
+        daily_returns[currency] = close_data[currency] / close_data[currency].shift(1) - 1
+    return daily_returns
+    
+currencies = ["bitcoin", "cardano", "ethereum"]
+print(calculate_global_minimum_variance(*currencies))
     #Convert tickers back to names
-    portfolio_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
-    return portfolio_percentages
+    #portfolio_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in portfolio_percentages.items()}
+    #return portfolio_percentages
