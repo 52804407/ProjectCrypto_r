@@ -56,14 +56,14 @@ def calculate_value_weights(*currencies):
 
 # Global_minimum_variance portfolio
 #convert user input to ticker symbol
-def calculate_global_minimum_variance(*currencies):
+def calculate_global_minimum_variance(*currencies, start_date, end_date):
 
     currencies = convert_to_tickers(currencies, crypto_mapping_top50)
 
     #Call the portfolio_manager function with user-selected cryptocurrencies
     #portfolio_percentages = portfolio_manager2(*currencies)
     #daily_returns = calculate_daily_returns(*currencies)
-    GMV_percentages = portfolio_manager_GMV(*currencies)
+    GMV_percentages = portfolio_manager_GMV(*currencies, start_date=start_date, end_date=end_date)
     #Convert tickers back to names
     GMV_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in GMV_percentages.items()}
     return GMV_percentages

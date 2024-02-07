@@ -103,9 +103,28 @@ def main(currencies, list_currencies, start_date):
             print(f"Invalid start date format. {e.message}")
             return  # Exit the function or ask for the input again based on your preference
 
+    #Function to extract start date from period
+    def get_start_date_from_period(period):
+        unit = period[-1]
+        quantity = int(period[:-1])
+        if unit == 'D':
+            return datetime.now() - timedelta(days=quantity)
+        elif unit == 'W':
+            return datetime.now() - timedelta(weeks=quantity)
+        elif unit == 'M':
+            return datetime.now() - timedelta(days=30*quantity)  # Approximation
+        elif unit == 'Y':
+            return datetime.now() - timedelta(days=365*quantity)  # Approximation
 
+    
+    #Setting start and end dates to pass on for GMV according to user's choice (end date always today)
+    start_date_dt = get_start_date_from_period(start_date)
+    end_date_dt = datetime.now()
+    start_date_str = start_date_dt.strftime('%Y-%m-%d')
+    end_date_str = end_date_dt.strftime('%Y-%m-%d')
+    
+    #Choose the portfolio
     portfolio_choice = get_portfolio_choice()
-
     if portfolio_choice == 1:
         portfolio_percentages = calculate_value_weights(*currencies)
         portfolio_name = "Value-weighted Portfolio"
@@ -113,7 +132,7 @@ def main(currencies, list_currencies, start_date):
         portfolio_percentages = calculate_equal_weights(*currencies)    
         portfolio_name = "Equal-weighted Portfolio"
     elif portfolio_choice == 3:
-        portfolio_percentages = calculate_global_minimum_variance(*currencies)
+        portfolio_percentages = calculate_global_minimum_variance(*currencies, start_date=start_date_str, end_date=end_date_str)
         portfolio_name = "Global Minimum Variance Portfolio"
 
     #Print the resulting portfolio
@@ -134,19 +153,7 @@ def main(currencies, list_currencies, start_date):
     plt.title(f"{portfolio_name} Distribution")
     plt.show()
 
-    def get_start_date_from_period(period):
-        unit = period[-1]
-        quantity = int(period[:-1])
-        if unit == 'D':
-            return datetime.now() - timedelta(days=quantity)
-        elif unit == 'W':
-            return datetime.now() - timedelta(weeks=quantity)
-        elif unit == 'M':
-            return datetime.now() - timedelta(days=30*quantity)  # Approximation
-        elif unit == 'Y':
-            return datetime.now() - timedelta(days=365*quantity)  # Approximation
-
-#Function to fetch historical data and calculate returns
+    #Function to fetch historical data and calculate returns
     def calculate_portfolio_returns(portfolio_percentages, start_date, initial_investment=1000):
         start_date = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')

@@ -22,12 +22,12 @@ from scipy.optimize import minimize
 #    return close_data
 
 #Function calculating daily returns
-def calculate_daily_returns(*currencies):
+def calculate_daily_returns(*currencies, start_date, end_date):
     close_data = pd.DataFrame()
     daily_returns = pd.DataFrame()
     for currency in currencies:
         ticker = yf.Ticker(currency)
-        close_data[currency] = ticker.history()["Close"]
+        close_data[currency] = ticker.history(start=start_date, end=end_date)["Close"]
         daily_returns[currency] = close_data[currency] / close_data[currency].shift(1) - 1
     return daily_returns
 
@@ -37,12 +37,12 @@ def calculate_daily_returns(*currencies):
 
 
 # Function that calculates how should be porfolio managed in % based on GMV
-def portfolio_manager_GMV(*currencies): 
+def portfolio_manager_GMV(*currencies, start_date, end_date): 
     # Ensure there are at most 5 currencies
     if len(currencies) > 5:
         raise ValueError("Up to 5 currencies are allowed")
     #Insert return from calculate_daily_returns function
-    daily_returns = calculate_daily_returns(*currencies)
+    daily_returns = calculate_daily_returns(*currencies, start_date=start_date, end_date=end_date)
     #Calculate the cov matrix
     daily_returns_cov_matrix = daily_returns.cov()
 
