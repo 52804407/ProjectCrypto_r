@@ -108,11 +108,13 @@ def main(currencies, list_currencies, start_date):
 
     if portfolio_choice == 1:
         portfolio_percentages = calculate_value_weights(*currencies)
+        portfolio_name = "Value-weighted Portfolio"
     elif portfolio_choice == 2:
         portfolio_percentages = calculate_equal_weights(*currencies)    
+        portfolio_name = "Equal-weighted Portfolio"
     elif portfolio_choice == 3:
         portfolio_percentages = calculate_global_minimum_variance(*currencies)
-        
+        portfolio_name = "Global Minimum Variance Portfolio"
 
     #Print the resulting portfolio
     print("\nYour portfolio percentages:")
@@ -122,13 +124,14 @@ def main(currencies, list_currencies, start_date):
         print(f"{currency}: {percentage:.2f}%")
         labels.append(currency)
         sizes.append(percentage)
-    
-    #Pie chart of resulting portfolio
+    print("Please close the generated pie chart to continue")
+
+    #Pie chart of resulting portfolio distribution
     fig1, ax1 = plt.subplots()
     ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
     ax1.axis('equal')
 
-    plt.title("Value-Weighted Portfolio Distribution")
+    plt.title(f"{portfolio_name} Distribution")
     plt.show()
 
     def get_start_date_from_period(period):
@@ -143,10 +146,10 @@ def main(currencies, list_currencies, start_date):
         elif unit == 'Y':
             return datetime.now() - timedelta(days=365*quantity)  # Approximation
 
-# Function to fetch historical data and calculate returns
+#Function to fetch historical data and calculate returns
     def calculate_portfolio_returns(portfolio_percentages, start_date, initial_investment=1000):
-        start_date_actual = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
-        end_date_actual = datetime.now().strftime('%Y-%m-%d')
+        start_date = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
+        end_date = datetime.now().strftime('%Y-%m-%d')
         
         portfolio_returns = pd.DataFrame()
         
@@ -154,12 +157,12 @@ def main(currencies, list_currencies, start_date):
             # Append '-USD' to each currency symbol
             symbol = get_crypto_symbol(currency) + '-USD'
             try:
-                data = yf.download(symbol, start=start_date_actual, end=end_date_actual)
+                data = yf.download(symbol, start=start_date, end=end_date)
                 
-                # Calculate daily returns
+                #Calculate daily returns
                 daily_returns = data['Adj Close'].pct_change()
                 
-                # Calculate weighted returns
+                #Calculate weighted returns
                 weight = percentage / 100
                 portfolio_returns[currency] = daily_returns * weight
             except Exception as e:
@@ -186,7 +189,7 @@ def main(currencies, list_currencies, start_date):
             starting_value = 100  # Starting at 100%
             ending_value = cumulative_returns.iloc[-1]  # Last value in the series
             performance_difference = ending_value - starting_value
-            print(f"Portfolio performance from start to end date: {performance_difference:.2f}% difference.")
+            print(f"Portfolio performance from start date to today: {performance_difference:.2f}% difference.")
         else:
             print("No data available to plot.")
 
