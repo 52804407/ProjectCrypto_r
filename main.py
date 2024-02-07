@@ -82,7 +82,7 @@ def main(currencies, list_currencies, start_date):
 
     #Input for currencies
     if not currencies:
-        print("\nEnter up to 5 crypto slugs (e.g.: bitcoin ethereum solana) or choose top3 and top5 by market cap") 
+        print("\nEnter up to 5 crypto slugs (e.g.: bitcoin ethereum solana) or choose top3 / top5 by market cap") 
         print("(Press Enter to skip and use default portfolio (top5))")
         user_input = input().strip()
         #Replace non-alphanumeric characters (except "-") with space
@@ -99,6 +99,9 @@ def main(currencies, list_currencies, start_date):
         #Add top3 choice
         if currencies == ["top3"]:
             currencies = ["bitcoin", "ethereum", "tether"]
+        #Add top5 choice
+        if currencies == ["top5"]:
+            currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
 
     #Input for time period
     print("\nEnter time period (end date is today) in the format: <number><D/W/M/Y> (e.g.: 5D, 1W, 6M, 1Y)")
