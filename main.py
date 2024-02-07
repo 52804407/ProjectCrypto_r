@@ -30,23 +30,23 @@ from yfinance_functions import (calculate_daily_returns,
                                 #get_daily_close_price_data,
                                 portfolio_manager_GMV)
 
-# Enhanced validation function for start_date
+#Validation function for start_date
 def validate_start_date(ctx, param, value):
     # Regular expression to match the format and extract parts
-    match = re.match(r'(\d+)([DWMY])$', value.upper())
+    match = re.match(r"(\d+)([DWMY])$", value.upper())
     if not match:
-        raise click.BadParameter('Start date must be in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y)')
+        raise click.BadParameter("Start date must be in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y)")
     
     number, unit = int(match.group(1)), match.group(2)
     # Validate the number based on the unit
     if unit == 'D' and not (1 <= number <= 365):
-        raise click.BadParameter('Days must be between 1 and 365')
+        raise click.BadParameter("Days must be between 1 and 365")
     elif unit == 'W' and not (1 <= number <= 52):
-        raise click.BadParameter('Weeks must be between 1 and 52')
+        raise click.BadParameter("Weeks must be between 1 and 52")
     elif unit == 'M' and not (1 <= number <= 12):
-        raise click.BadParameter('Months must be between 1 and 12')
-    elif unit == 'Y' and number != 1:
-        raise click.BadParameter('Years must be 1')
+        raise click.BadParameter("Months must be between 1 and 12")
+    elif unit == 'Y' and not (1 <= number <= 3):
+        raise click.BadParameter("Years must be between 1 and 5")
     
     return value.upper()
 
@@ -58,7 +58,7 @@ def get_portfolio_choice():
 
     while True:
         try:
-            choice = int(input("Enter the number of your choice (1-3): "))
+            choice = int(input("Enter the number of your choice (1-3):"))
             if 1 <= choice <= 3:
                 return choice
             else:
@@ -95,7 +95,10 @@ def main(currencies, list_currencies, start_date):
             return ### TO-DO: ASK FOR INPUT AGAIN
         #Default currencies if user skips
         if not currencies:
-            currencies = ["bitcoin", "ethereum", "bnb", "xrp", "cardano"]
+            currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
+        #Add top3 choice
+        if currencies == ["top3"]:
+            currencies = ["bitcoin", "ethereum", "tether"]
 
     #Input for time period
     print("Enter time period (end date is today) in the format: <number><D/W/M/Y> (e.g.: 5D, 1W, 6M, 1Y)")
@@ -162,7 +165,7 @@ def main(currencies, list_currencies, start_date):
     plt.title(f"{portfolio_name} Distribution")
     plt.show()
 
-    def calculate_portfolio_returns(portfolio_percentages, start_date, initial_investment=1000):
+    def calculate_portfolio_returns(portfolio_percentages, start_date):
         start_date_formatted = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
         
@@ -189,7 +192,7 @@ def main(currencies, list_currencies, start_date):
 
         return pd.Series()#If no data are available return an empty series
     
-    cumulative_returns = calculate_portfolio_returns(portfolio_percentages, start_date, 1000)
+    cumulative_returns = calculate_portfolio_returns(portfolio_percentages, start_date)
     if not cumulative_returns.empty:
         cumulative_returns.plot(title="Portfolio Cumulative Returns Over Time")
         plt.xlabel("Date")
@@ -200,6 +203,7 @@ def main(currencies, list_currencies, start_date):
 
     #Ask user if they want to compare another portfolio
     compare_another = input("Would you like to compare returns with another portfolio? (yes/no): ").strip().lower()
+    cumulative_returns_2 = None #Begin with empty cumulative_returns_2
     if compare_another == "yes":
         # Repeat the portfolio selection process
         portfolio_choice_2 = get_portfolio_choice()
@@ -213,11 +217,11 @@ def main(currencies, list_currencies, start_date):
             portfolio_percentages_2 = calculate_global_minimum_variance(*currencies, start_date=start_date_str, end_date=end_date_str)
             portfolio_name_2 = "Global Minimum Variance Portfolio"
 
-        # Calculate returns for the second portfolio
-        cumulative_returns_2 = calculate_portfolio_returns(portfolio_percentages_2, start_date, 1000)
+        #Calculate cumulative returns for the second portfolio
+        cumulative_returns_2 = calculate_portfolio_returns(portfolio_percentages_2, start_date)
 
-    if not cumulative_returns.empty and not cumulative_returns_2.empty:
-        plt.figure(figsize=(10, 6))  # Optional: Customize the figure size
+    if not cumulative_returns.empty and cumulative_returns_2 is not None and not cumulative_returns_2.empty: #This covers the input "no"
+        plt.figure(figsize=(10, 6))
         
         # Plot the first portfolio
         cumulative_returns.plot(label=f'{portfolio_name}')
@@ -231,9 +235,6 @@ def main(currencies, list_currencies, start_date):
         plt.legend()
         plt.grid(True)
         plt.show()
-    #Error message if no data available for plotting
-    else:
-        print("One or both of the portfolios have no data for plotting.")
 
 if __name__ == "__main__":
     main()

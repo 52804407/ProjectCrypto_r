@@ -50,11 +50,11 @@ def portfolio_manager_GMV(*currencies, start_date, end_date):
 
     #We need to specify an initial guess 
     #Equal weighted portfolio
-    #init_guess = []
-    #for i in range(len(currencies)):
-    #    init_guess.append(1 / len(currencies))
+    init_guess = []
+    for i in range(len(currencies)):
+        init_guess.append(1 / len(currencies))
     #Back-loaded portfolio
-    init_guess = [0.5 / (len(currencies) - 1) for i in range(len(currencies) - 1)] + [0.5]
+    #init_guess = [0.5 / (len(currencies) - 1) for i in range(len(currencies) - 1)] + [0.5]
     #Front-loaded portfolio
     #init_guess = [0.5] + [0.5 / (len(currencies) - 1) for _ in range(len(currencies) - 1)]
     
