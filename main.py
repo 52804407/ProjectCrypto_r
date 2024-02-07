@@ -68,8 +68,8 @@ def get_portfolio_choice():
 
 @click.command()
 @click.argument('currencies', nargs=-1)
-@click.option('--list', 'list_currencies', is_flag=True, help='List all available crypto slugs')
-@click.option('--start_date', default='1D', callback=validate_start_date, show_default=True, help="Start date in the format of <number><D/W/M/Y>. Default is 1D.")
+@click.option("--list", "list_currencies", is_flag=True, help="List all available crypto slugs")
+@click.option("--start_date", default="1M", callback=validate_start_date, show_default=True, help="Start date in the format of <number><D/W/M/Y>. Default is 1M.")
 
 def main(currencies, list_currencies, start_date):
     if list_currencies:

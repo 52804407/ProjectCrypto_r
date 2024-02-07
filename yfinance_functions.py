@@ -4,23 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
-#Function to download daily close price data
-#def get_daily_close_price_data(*currencies):
-#    if len(currencies) > 5:
-#        raise ValueError("Up to 5 currencies are allowed")
-#    elif len(currencies) > 1:
-#        # Initialize a dictionary to hold close data for each currency
-#        close_data = {}
-#        for currency in currencies:
-#            ticker = yf.Ticker(currency)
-#            data = ticker.history()
-#            close_data[currency] = data["Close"]
-#    elif len(currencies) == 1:
-#        ticker = yf.Ticker(currencies[0])
-#        data = ticker.history()
-#        close_data = {currencies[0]: data["Close"]}
-#    return close_data
-
 #Function calculating daily returns
 def calculate_daily_returns(*currencies, start_date, end_date):
     close_data = pd.DataFrame()
