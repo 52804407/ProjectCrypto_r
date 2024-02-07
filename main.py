@@ -20,7 +20,7 @@ from api_functions import (get_crypto_slugs,
                            get_crypto_symbol,
                            get_market_cap)
 
-                           
+from slugs_mapping_tool import (crypto_mapping_top50)                           
 
 from portfolio_functions import (calculate_equal_weights,
                                  calculate_global_minimum_variance,
@@ -39,13 +39,13 @@ def validate_start_date(ctx, param, value):
     
     number, unit = int(match.group(1)), match.group(2)
     # Validate the number based on the unit
-    if unit == 'D' and not (1 <= number <= 365):
+    if unit == "D" and not (1 <= number <= 365):
         raise click.BadParameter("Days must be between 1 and 365")
-    elif unit == 'W' and not (1 <= number <= 52):
+    elif unit == "W" and not (1 <= number <= 52):
         raise click.BadParameter("Weeks must be between 1 and 52")
-    elif unit == 'M' and not (1 <= number <= 12):
+    elif unit == "M" and not (1 <= number <= 12):
         raise click.BadParameter("Months must be between 1 and 12")
-    elif unit == 'Y' and not (1 <= number <= 3):
+    elif unit == "Y" and not (1 <= number <= 3):
         raise click.BadParameter("Years must be between 1 and 5")
     
     return value.upper()
@@ -81,27 +81,45 @@ def main(currencies, list_currencies, start_date):
         return
 
     #Input for currencies
-    if not currencies:
-        print("\nEnter up to 5 crypto slugs (e.g.: bitcoin ethereum solana) or choose top3 / top5 by market cap") 
-        print("(Press Enter to skip and use default portfolio (top5))")
-        user_input = input().strip()
-        #Replace non-alphanumeric characters (except "-") with space
-        user_input = ''.join(char if char.isalnum() or char.isspace() or char == '-' else ' ' for char in user_input)
-        #Split the input into a list of cryptocurrencies
-        currencies = user_input.split()
-        #Restrict the maximum number of currencies to 5
-        if len(currencies) > 5:
-            print("A maximum of 5 cryptocurrencies is allowed.")
-            return ### TO-DO: ASK FOR INPUT AGAIN
-        #Default currencies if user skips
+    while True: #Continue until valid input is received
         if not currencies:
-            currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
-        #Add top3 choice
-        if currencies == ["top3"]:
-            currencies = ["bitcoin", "ethereum", "tether"]
-        #Add top5 choice
-        if currencies == ["top5"]:
-            currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
+            print("\nEnter up to 5 crypto slugs (e.g.: bitcoin ethereum solana), choose top3 / top5 by market cap or type list to list all available slugs") 
+            print("(Press Enter to skip and use default portfolio (top5))")
+            user_input = input().strip()
+            #Replace non-alphanumeric characters (except "-") with space
+            user_input = ''.join(char if char.isalnum() or char.isspace() or char == '-' else ' ' for char in user_input)
+            #Split the input into a list of cryptocurrencies
+            currencies = user_input.split()
+
+            #Add the list option to display all available slugs
+            if currencies == ["list"]:
+                available_slugs = list(crypto_mapping_top50.keys())
+                print("\nList of available crypto slugs:")
+                print(available_slugs)
+                currencies = [] #Reset currencies
+                continue #Go back to the beginning of the loop    
+
+            #Restrict the maximum number of currencies to 5
+            if len(currencies) > 5:
+                print("\nA maximum of 5 cryptocurrencies is allowed.")
+                currencies = [] #Reset currencies
+                continue #Go back to the beginning of the loop
+
+            #Default currencies if user skips
+            if not currencies:
+                currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
+                break
+            #Add top3 choice
+            if currencies == ["top3"]:
+                currencies = ["bitcoin", "ethereum", "tether"]
+                break
+            #Add top5 choice
+            if currencies == ["top5"]:
+                currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
+                break
+            
+            if currencies:
+                break    
 
     #Input for time period
     print("\nEnter time period (end date is today) in the format: <number><D/W/M/Y> (e.g.: 5D, 1W, 6M, 1Y)")
