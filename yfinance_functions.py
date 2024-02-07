@@ -53,24 +53,30 @@ def portfolio_manager_GMV(*currencies):
     def check_sum(weights):
         return np.sum(weights) - 1
 
-    ##We need to specify an initial guess (equal weighted portfolio)
+    #We need to specify an initial guess (equal weighted portfolio)
+    
     init_guess = []
     for i in range(len(currencies)):
         init_guess.append(1 / len(currencies))
-    #init_guess = [0.5 / (len(currencies) - 1) for _ in range(len(currencies) - 1)] + [0.5]
-
-
+    #Back-loaded portfolio
+    #init_guess = [0.5 / (len(currencies) - 1) for i in range(len(currencies) - 1)] + [0.5]
+    #Front-loaded portfolio
+    #init_guess = [0.5] + [0.5 / (len(currencies) - 1) for _ in range(len(currencies) - 1)]
     #Limit each percentage to be between 0 and 1
     bounds = tuple((0, 1) for i in range(len(currencies)))
     #Set constraints so that percentages sum to 1 
     constraints = ({'type': 'eq', 'fun': check_sum})
 
+    #Specify options to increase GMV iterations and adjust tolerance (to make GMV optimizations more precise)
+    options = {
+        'maxiter': 100000,
+        'ftol': 1e-6,
+        'disp': False
+    }
+
     #Minimize the portfolio variance using SLSQP
-    opt_results = minimize(portfolio_variance, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
+    opt_results = minimize(portfolio_variance, init_guess, method='SLSQP', bounds=bounds, constraints=constraints, options=options)
     #Save percentages in a dictionary for each currency
     percentages = dict(zip(currencies, opt_results.x*100))
 
     return percentages
-#currencies = ["BTC-USD", "ETH-USD", "SOL-USD", "BNB-USD", "ADA-USD"]
-#print(portfolio_manager_GMV(*currencies))
-#print(calculate_daily_returns(*currencies))
