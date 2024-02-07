@@ -162,56 +162,77 @@ def main(currencies, list_currencies, start_date):
     plt.title(f"{portfolio_name} Distribution")
     plt.show()
 
-    #Function to fetch historical data and calculate returns
     def calculate_portfolio_returns(portfolio_percentages, start_date, initial_investment=1000):
-        start_date = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
+        start_date_formatted = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
         
         portfolio_returns = pd.DataFrame()
-        
+
         for currency, percentage in portfolio_percentages.items():
-            #Append "-USD" to each currency symbol
             symbol = get_crypto_symbol(currency) + "-USD"
             try:
-                data = yf.download(symbol, start=start_date, end=end_date)
-                
-                #Calculate daily returns
-                daily_returns = data["Close"].pct_change()
-                
-                #Calculate weighted returns
-                weight = percentage / 100
-                portfolio_returns[currency] = daily_returns * weight
-            #If download failed, print error message
+                data = yf.download(symbol, start=start_date_formatted, end=end_date)
+                if not data.empty:
+                    daily_returns = data['Close'].pct_change()
+                    weight = percentage / 100
+                    portfolio_returns[currency] = daily_returns * weight
             except Exception as e:
                 print(f"Failed to download {symbol}: {str(e)}")
-        
+
         if not portfolio_returns.empty:
-            #Calculate portfolio daily returns
+            # Sum the weighted returns across all currencies to get the portfolio's daily returns
             portfolio_daily_returns = portfolio_returns.sum(axis=1)
-            
-            #Calculate cumulative returns and normalize starting value to 100%
+            # Calculate cumulative returns
             cumulative_returns = (1 + portfolio_daily_returns).cumprod() * 100
             
-            plt.figure(figsize=(10, 6))
-            plt.plot(cumulative_returns.index, cumulative_returns, label=f"{portfolio_name}")
-            plt.title(f"{portfolio_name} Performance Over Time")
-            plt.xlabel("Date")
-            plt.ylabel("Performance (%)")
-            plt.legend()
-            plt.grid(True)
-            plt.show()
-            
-            # Calculate and print the portfolio difference in %
-            starting_value = 100
-            ending_value = cumulative_returns.iloc[-1]
-            performance_difference = ending_value - starting_value
-            print(f"Portfolio performance from start date to today: {performance_difference:.2f}% difference.")
-        #If failed, print error message
-        else:
-            print("No data available to plot.")
+            return cumulative_returns  # This is a Series with a DateTime index
 
+        return pd.Series()  # Return an empty series if no data
+    
+    cumulative_returns = calculate_portfolio_returns(portfolio_percentages, start_date, 1000)
+    if not cumulative_returns.empty:
+        cumulative_returns.plot(title='Portfolio Cumulative Returns Over Time')
+        plt.xlabel('Date')
+        plt.ylabel('Cumulative Returns')
+        plt.show()
+    else:
+        print("No data available to plot.")
 
-    calculate_portfolio_returns(portfolio_percentages, start_date, 1000)
+    # Ask user if they want to compare another portfolio
+    compare_another = input("Would you like to compare another portfolio? (yes/no): ").strip().lower()
+    if compare_another == 'yes':
+        # Repeat the portfolio selection process
+        portfolio_choice_2 = get_portfolio_choice()
+        if portfolio_choice_2 == 1:
+            portfolio_percentages_2 = calculate_value_weights(*currencies)
+            portfolio_name_2 = "Value-weighted Portfolio"
+        elif portfolio_choice_2 == 2:
+            portfolio_percentages_2 = calculate_equal_weights(*currencies)    
+            portfolio_name_2 = "Equal-weighted Portfolio"
+        elif portfolio_choice_2 == 3:
+            portfolio_percentages_2 = calculate_global_minimum_variance(*currencies, start_date=start_date_str, end_date=end_date_str)
+            portfolio_name_2 = "Global Minimum Variance Portfolio"
+
+        # Calculate returns for the second portfolio
+        cumulative_returns_2 = calculate_portfolio_returns(portfolio_percentages_2, start_date, 1000)
+
+    if not cumulative_returns.empty and not cumulative_returns_2.empty:
+        plt.figure(figsize=(10, 6))  # Optional: Customize the figure size
+        
+        # Plot the first portfolio
+        cumulative_returns.plot(label=f'{portfolio_name}')
+        
+        # Plot the second portfolio on the same figure
+        cumulative_returns_2.plot(label=f'{portfolio_name_2}')
+        
+        plt.title('Comparison of Portfolio Performances Over Time')
+        plt.xlabel('Date')
+        plt.ylabel('Cumulative Returns')
+        plt.legend()  # This makes sure the labels set in the plot calls are displayed as a legend
+        plt.grid(True)  # Optional: Add grid for better readability
+        plt.show()
+    else:
+        print("One or both of the portfolios have no data for plotting.")
 
 if __name__ == "__main__":
     main()
