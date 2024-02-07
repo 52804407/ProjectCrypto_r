@@ -28,9 +28,6 @@ def calculate_equal_weights(*currencies):
 
 # Value_weighted portfolio (based on live market capitalization)
 def calculate_value_weights(*currencies): 
-    # Ensure there are at most 5 currencies
-    if len(currencies) > 5:
-        raise ValueError("Up to 5 currencies are allowed")
     # Get market cap for each currency
     market_caps = {}
     for currency in currencies:
@@ -43,26 +40,22 @@ def calculate_value_weights(*currencies):
                 market_caps[currency] = market_cap_dict[crypto_symbol]        
         except ValueError as e:
             print(e)
-    # If no valid currencies found, print a message
+    #If market cap not available for chosen currencies, print error message
     if not market_caps:
         print("No valid currencies found")
     else:
-        # Calculate total market cap
+        #Calculate total market cap
         total_market_cap = sum(market_caps.values())
-        # Calculate and print percentages for each currency
+        #Calculate and print percentages for each currency based on market cap share of total
         percentages = {currency: market_cap / total_market_cap * 100 for currency, market_cap in market_caps.items()}
         return percentages
 
 
-# Global_minimum_variance portfolio
-#convert user input to ticker symbol
+#Global_minimum_variance portfolio
 def calculate_global_minimum_variance(*currencies, start_date, end_date):
-
+    #Convert user input to ticker symbol
     currencies = convert_to_tickers(currencies, crypto_mapping_top50)
-
     #Call the portfolio_manager function with user-selected cryptocurrencies
-    #portfolio_percentages = portfolio_manager2(*currencies)
-    #daily_returns = calculate_daily_returns(*currencies)
     GMV_percentages = portfolio_manager_GMV(*currencies, start_date=start_date, end_date=end_date)
     #Convert tickers back to names
     GMV_percentages = {convert_to_names(crypto_mapping_top50).get(ticker, ticker): percentage for ticker, percentage in GMV_percentages.items()}

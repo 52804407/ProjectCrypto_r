@@ -31,11 +31,6 @@ def calculate_daily_returns(*currencies, start_date, end_date):
         daily_returns[currency] = close_data[currency] / close_data[currency].shift(1) - 1
     return daily_returns
 
-
-
-#print(calculate_daily_returns(*currencies)["BTC-USD"])
-
-
 # Function that calculates how should be porfolio managed in % based on GMV
 def portfolio_manager_GMV(*currencies, start_date, end_date): 
     # Ensure there are at most 5 currencies
@@ -53,15 +48,16 @@ def portfolio_manager_GMV(*currencies, start_date, end_date):
     def check_sum(weights):
         return np.sum(weights) - 1
 
-    #We need to specify an initial guess (equal weighted portfolio)
-    
-    init_guess = []
-    for i in range(len(currencies)):
-        init_guess.append(1 / len(currencies))
+    #We need to specify an initial guess 
+    #Equal weighted portfolio
+    #init_guess = []
+    #for i in range(len(currencies)):
+    #    init_guess.append(1 / len(currencies))
     #Back-loaded portfolio
-    #init_guess = [0.5 / (len(currencies) - 1) for i in range(len(currencies) - 1)] + [0.5]
+    init_guess = [0.5 / (len(currencies) - 1) for i in range(len(currencies) - 1)] + [0.5]
     #Front-loaded portfolio
     #init_guess = [0.5] + [0.5 / (len(currencies) - 1) for _ in range(len(currencies) - 1)]
+    
     #Limit each percentage to be between 0 and 1
     bounds = tuple((0, 1) for i in range(len(currencies)))
     #Set constraints so that percentages sum to 1 
@@ -75,7 +71,7 @@ def portfolio_manager_GMV(*currencies, start_date, end_date):
     }
 
     #Minimize the portfolio variance using SLSQP
-    opt_results = minimize(portfolio_variance, init_guess, method='SLSQP', bounds=bounds, constraints=constraints, options=options)
+    opt_results = minimize(portfolio_variance, init_guess, method="SLSQP", bounds=bounds, constraints=constraints, options=options)
     #Save percentages in a dictionary for each currency
     percentages = dict(zip(currencies, opt_results.x*100))
 
