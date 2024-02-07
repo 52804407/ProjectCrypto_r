@@ -180,27 +180,27 @@ def main(currencies, list_currencies, start_date):
                 print(f"Failed to download {symbol}: {str(e)}")
 
         if not portfolio_returns.empty:
-            # Sum the weighted returns across all currencies to get the portfolio's daily returns
+            #Sum the weighted returns across all currencies to get the portfolio's daily returns
             portfolio_daily_returns = portfolio_returns.sum(axis=1)
-            # Calculate cumulative returns
+            #Calculate cumulative returns
             cumulative_returns = (1 + portfolio_daily_returns).cumprod() * 100
             
-            return cumulative_returns  # This is a Series with a DateTime index
+            return cumulative_returns
 
-        return pd.Series()  # Return an empty series if no data
+        return pd.Series()#If no data are available return an empty series
     
     cumulative_returns = calculate_portfolio_returns(portfolio_percentages, start_date, 1000)
     if not cumulative_returns.empty:
-        cumulative_returns.plot(title='Portfolio Cumulative Returns Over Time')
-        plt.xlabel('Date')
-        plt.ylabel('Cumulative Returns')
+        cumulative_returns.plot(title="Portfolio Cumulative Returns Over Time")
+        plt.xlabel("Date")
+        plt.ylabel("Cumulative Returns")
         plt.show()
     else:
         print("No data available to plot.")
 
-    # Ask user if they want to compare another portfolio
-    compare_another = input("Would you like to compare another portfolio? (yes/no): ").strip().lower()
-    if compare_another == 'yes':
+    #Ask user if they want to compare another portfolio
+    compare_another = input("Would you like to compare returns with another portfolio? (yes/no): ").strip().lower()
+    if compare_another == "yes":
         # Repeat the portfolio selection process
         portfolio_choice_2 = get_portfolio_choice()
         if portfolio_choice_2 == 1:
@@ -225,12 +225,13 @@ def main(currencies, list_currencies, start_date):
         # Plot the second portfolio on the same figure
         cumulative_returns_2.plot(label=f'{portfolio_name_2}')
         
-        plt.title('Comparison of Portfolio Performances Over Time')
-        plt.xlabel('Date')
-        plt.ylabel('Cumulative Returns')
-        plt.legend()  # This makes sure the labels set in the plot calls are displayed as a legend
-        plt.grid(True)  # Optional: Add grid for better readability
+        plt.title("Comparison of Portfolio Performances Over Time")
+        plt.xlabel("Date")
+        plt.ylabel("Cumulative Returns")
+        plt.legend()
+        plt.grid(True)
         plt.show()
+    #Error message if no data available for plotting
     else:
         print("One or both of the portfolios have no data for plotting.")
 
