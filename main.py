@@ -73,7 +73,7 @@ def get_portfolio_choice():
 
 def main(currencies, list_currencies, start_date):
     if list_currencies:
-        # If the user wants to list all crypto slugs, call the get_crypto_slugs function
+        #If the user wants to list all crypto slugs, call the get_crypto_slugs function
         crypto_slugs = get_crypto_slugs()
         print("Available crypto slugs:")
         for slug in crypto_slugs:
@@ -85,8 +85,8 @@ def main(currencies, list_currencies, start_date):
         print("Enter up to 5 crypto slugs (e.g.: bitcoin ethereum solana) or choose top3 and top5 by market cap") 
         print("(Press Enter to skip and use default portfolio (top5))")
         user_input = input().strip()
-        #Replace non-alphanumeric characters with space
-        user_input = ''.join(char if char.isalnum() or char.isspace() else ' ' for char in user_input)
+        #Replace non-alphanumeric characters (except "-") with space
+        user_input = ''.join(char if char.isalnum() or char.isspace() or char == '-' else ' ' for char in user_input)
         #Split the input into a list of cryptocurrencies
         currencies = user_input.split()
         #Restrict the maximum number of currencies to 5
