@@ -19,6 +19,15 @@ This tool is designed to analyze cryptocurrency portfolios using data from CoinM
 - Visualizing portfolio percentages with a pie chart.
 - Comparing portfolio returns over a specified time period.
 
+## Next Steps
+Future enhancements may include:
+- Integration of additional data sources for more comprehensive analysis.
+- Expansion of the portfolio types and comparison metrics.
+- Improvement of the visualization features to offer more customization options.
+- Optimization of API usage to enhance performance and reduce data retrieval times.
+
+## Authors: Sebastian Pasz and Tomáš Šamaj
+
 ## Usage
 To use the tool, run `main.py` from the command line with the following options:
 - `--list` to display all available cryptocurrency slugs.
@@ -26,6 +35,7 @@ To use the tool, run `main.py` from the command line with the following options:
 
 Example command:
 ```bash
+
 python main.py
 
 You will be prompted to:
@@ -34,13 +44,6 @@ You will be prompted to:
 3. Choose a portfolio type (Value Weighted, Equal Weighted, Global Minimum Variance).
 
 After making your selections, the tool will generate and display a pie chart of the portfolio percentages. Following this, it will show charts of portfolio returns and allow you to compare returns with another chosen portfolio type.
-```bash
 
-## Next Steps
-Future enhancements may include:
-- Integration of additional data sources for more comprehensive analysis.
-- Expansion of the portfolio types and comparison metrics.
-- Improvement of the visualization features to offer more customization options.
-- Optimization of API usage to enhance performance and reduce data retrieval times.
 
-# Authors: Sebastian Pasz and Tomáš Šamaj
+
