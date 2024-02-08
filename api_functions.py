@@ -9,10 +9,6 @@ import configparser
 from dateutil import parser
 import pytz
 
-
-
-
-
 #Function that obtains cryptocurency market_cap in USD from coinmarketcap API
 def get_market_cap(slug ="bitcoin", id = 1): 
     #Read the API key from the config.ini file
@@ -41,10 +37,6 @@ def get_market_cap(slug ="bitcoin", id = 1):
     else:
         print(f"Currency with ID '{id}' not found")
         return {}  #Return an empty dictionary if currency is not found
-
-
-
-
 
 #Function that obtains ID of given slug 
 def get_crypto_ids(slug = 'bitcoin'): 
@@ -79,9 +71,6 @@ def get_crypto_ids(slug = 'bitcoin'):
     #Return the slug ID
     return crypto_slugs_ids[slug]
 
-
-
-
 #Function that finds symbol for given slug.
 def get_crypto_symbol(slug = 'bitcoin'):  
     config = configparser.ConfigParser()
@@ -111,10 +100,6 @@ def get_crypto_symbol(slug = 'bitcoin'):
         raise ValueError(f"Currency with slug '{slug}' not found")
     return crypto_slugs_symbol[slug]
 
-
-
-
-
 #Function that calculates how the porfolio is managed in % based on the crypto market_cap
 def portfolio_manager(*currencies): 
     #Ensure there are at most 5 currencies
@@ -142,11 +127,6 @@ def portfolio_manager(*currencies):
         percentages = {currency: market_cap / total_market_cap * 100 for currency, market_cap in market_caps.items()}
         return percentages
 
-
-
-
-
-
 # Function that prints all available crypto slugs
 def get_crypto_slugs(): #Function that prints all available crypto slugs
     # Read the API key from the config.ini file
@@ -172,5 +152,3 @@ def get_crypto_slugs(): #Function that prints all available crypto slugs
         crypto_slug = crypto['slug']
         crypto_slugs.append(crypto_slug) 
     return crypto_slugs
-
-
