@@ -9,7 +9,6 @@ import json
 from dateutil import parser
 import pytz
 import subprocess
-import configparser
 import click
 import re
 from datetime import datetime, timedelta
