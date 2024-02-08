@@ -83,7 +83,7 @@ def main(currencies, list_currencies, start_date):
     #Input for currencies
     while True: #Continue until valid input is received
         if not currencies:
-            print("\nEnter up to 5 crypto slugs (e.g.: bitcoin ethereum solana), choose top3 / top5 by market cap or type list to list all available slugs") 
+            print("\nEnter up to 5 crypto slugs (e.g.: \"bitcoin ethereum solana\"), choose \"top3\" / \"top5\" by market cap or type \"list\" to list all available slugs") 
             print("(Press Enter to skip and use default portfolio (top5))")
             user_input = input().strip()
             #Replace non-alphanumeric characters (except "-") with space
@@ -122,7 +122,7 @@ def main(currencies, list_currencies, start_date):
                 break    
 
     #Input for time period
-    print("\nEnter time period (end date is today) in the format: <number><D/W/M/Y> (e.g.: 5D, 1W, 6M, 1Y)")
+    print("\nEnter time period (end date is today) in the format: <number><D/W/M/Y> (e.g.: \"5D\", \"1W\", \"6M\", \"1Y\")")
     print("(Press Enter to skip and use default period (1M))")
     start_date_input = input().strip().upper()
     #Default value if user skips
