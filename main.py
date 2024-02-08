@@ -52,9 +52,9 @@ def validate_start_date(ctx, param, value):
 
 def get_portfolio_choice():
     print("Choose a portfolio:")
-    print("1. Value Weighted")
+    print("1. Value Weighted (based on live market cap)")
     print("2. Equal Weighted")
-    print("3. Global Minimum Variance")
+    print("3. Global Minimum Variance (might yield equal weighted results in some cases)")
 
     while True:
         try:
