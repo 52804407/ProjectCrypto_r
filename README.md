@@ -34,6 +34,7 @@ You will be prompted to:
 3. Choose a portfolio type (Value Weighted, Equal Weighted, Global Minimum Variance).
 
 After making your selections, the tool will generate and display a pie chart of the portfolio percentages. Following this, it will show charts of portfolio returns and allow you to compare returns with another chosen portfolio type.
+```bash
 
 ## Next Steps
 Future enhancements may include:
@@ -42,4 +43,4 @@ Future enhancements may include:
 - Improvement of the visualization features to offer more customization options.
 - Optimization of API usage to enhance performance and reduce data retrieval times.
 
-## Authors: Sebastian Pasz and Tomáš Šamaj
+# Authors: Sebastian Pasz and Tomáš Šamaj
