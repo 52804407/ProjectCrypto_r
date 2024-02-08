@@ -14,7 +14,7 @@
 
 ## Description
 This tool is designed to analyze cryptocurrency portfolios using data from CoinMarketCap and Yahoo Finance. It provides functionalities to calculate and visualize different types of portfolios based on live market capitalization, equal weighting, or global minimum variance. The main features include:
-- Listing all available cryptocurrency slugs using CoinMarketCap's API.
+- Listing all available cryptocurrency slugs (TOP 50 cryptocurrencies by market cap).
 - Calculating three types of portfolios: Value Weighted, Equal Weighted, and Global Minimum Variance.
 - Visualizing portfolio percentages with a pie chart.
 - Comparing portfolio returns over a specified time period.
