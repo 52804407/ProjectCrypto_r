@@ -22,7 +22,6 @@ This tool is designed to analyze cryptocurrency portfolios using data from CoinM
 
 ## Usage
 To use the tool, run `main.py` from the command line with the following options:
-- `--list` to display all available cryptocurrency slugs.
 - Without parameters to use interactive mode for portfolio selection and comparison.
 
 Example command:
