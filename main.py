@@ -186,34 +186,44 @@ def main(currencies, list_currencies, start_date):
     plt.title(f"{portfolio_name} Distribution")
     plt.show()
 
-    def calculate_portfolio_returns(portfolio_percentages, start_date):
+    def get_daily_returns(portfolio_percentages, start_date):
         start_date_formatted = get_start_date_from_period(start_date).strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
-        
-        portfolio_returns = pd.DataFrame()
 
-        for currency, percentage in portfolio_percentages.items():
+        daily_returns_dict = {}
+
+        for currency in portfolio_percentages.keys():
             symbol = get_crypto_symbol(currency) + "-USD"
             try:
                 data = yf.download(symbol, start=start_date_formatted, end=end_date)
                 if not data.empty:
                     daily_returns = data['Close'].pct_change()
-                    weight = percentage / 100
-                    portfolio_returns[currency] = daily_returns * weight
+                    daily_returns_dict[currency] = daily_returns
             except Exception as e:
                 print(f"Failed to download {symbol}: {str(e)}")
 
+        return daily_returns_dict
+
+    def calculate_weighted_cumulative_returns(daily_returns_dict, portfolio_percentages):
+        portfolio_returns = pd.DataFrame()
+
+        for currency, daily_returns in daily_returns_dict.items():
+            weight = portfolio_percentages[currency] / 100
+            portfolio_returns[currency] = daily_returns * weight
+
         if not portfolio_returns.empty:
-            #Sum the weighted returns across all currencies to get the portfolio's daily returns
             portfolio_daily_returns = portfolio_returns.sum(axis=1)
-            #Calculate cumulative returns
             cumulative_returns = (1 + portfolio_daily_returns).cumprod() * 100
-            
             return cumulative_returns
 
-        return pd.Series()#If no data are available return an empty series
-    
-    cumulative_returns = calculate_portfolio_returns(portfolio_percentages, start_date)
+        return pd.Series()  # If no data are available return an empty series
+
+    daily_returns_dict = get_daily_returns(portfolio_percentages, start_date)
+    cumulative_returns = calculate_weighted_cumulative_returns(daily_returns_dict, portfolio_percentages)
+
+
+
+
     if not cumulative_returns.empty:
         cumulative_returns.plot(title="Portfolio Cumulative Returns Over Time")
         plt.xlabel("Date")
@@ -242,7 +252,8 @@ def main(currencies, list_currencies, start_date):
             portfolio_name_2 = "Global Minimum Variance Portfolio"
 
         #Calculate cumulative returns for the second portfolio
-        cumulative_returns_2 = calculate_portfolio_returns(portfolio_percentages_2, start_date)
+        daily_returns_dict2 = get_daily_returns(portfolio_percentages_2, start_date)
+        cumulative_returns_2 = calculate_weighted_cumulative_returns(daily_returns_dict2, portfolio_percentages_2)
 
     if not cumulative_returns.empty and cumulative_returns_2 is not None and not cumulative_returns_2.empty: #This covers the input "no"
         plt.figure(figsize=(10, 6))
