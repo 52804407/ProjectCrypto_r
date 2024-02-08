@@ -68,18 +68,10 @@ def get_portfolio_choice():
 
 @click.command()
 @click.argument('currencies', nargs=-1)
-@click.option("--list", "list_currencies", is_flag=True, help="List all available crypto slugs")
 @click.option("--start_date", default="1M", callback=validate_start_date, show_default=True, help="Start date in the format of <number><D/W/M/Y>. Default is 1M.")
 
 def main(currencies, list_currencies, start_date):
-    if list_currencies:
-        #If the user wants to list all crypto slugs, call the get_crypto_slugs function
-        crypto_slugs = get_crypto_slugs()
-        print("Available crypto slugs:")
-        for slug in crypto_slugs:
-            print(slug)
-        return
-
+    
     #Input for currencies
     while True: #Continue until valid input is received
         if not currencies:

@@ -39,13 +39,8 @@ You will be prompted to:
 
 After making your selections, the tool will generate and display a pie chart of the portfolio percentages. Following this, it will show charts of portfolio returns and allow you to compare returns with another chosen portfolio type.
 
-Another Example command:
-```bash
 
-python main.py --list
 
-```
-This will list all available cryptocurrency slugs
 
 ## Next Steps
 Future enhancements may include:
