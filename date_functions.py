@@ -7,7 +7,7 @@ def validate_start_date(ctx, param, value):
     # Regular expression to match the format and extract parts
     match = re.match(r"(\d+)([DWMY])$", value.upper())
     if not match:
-        raise click.BadParameter("Start date must be in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y)")
+        raise click.BadParameter("Period must be in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y)")
     
     number, unit = int(match.group(1)), match.group(2)
     # Validate the number based on the unit

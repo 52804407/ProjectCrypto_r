@@ -46,7 +46,7 @@ def get_portfolio_choice():
 
 @click.command()
 @click.argument('currencies', nargs=-1)
-@click.option("--start_date", default="1M", callback=validate_start_date, show_default=True, help="Start date in the format of <number><D/W/M/Y>. Default is 1M.")
+@click.option("--start_date", default="1M", callback=validate_start_date, show_default=True, help="Period in the format of <number><D/W/M/Y>. Default is 1M.")
 
 
 def main(currencies, start_date):
@@ -112,7 +112,7 @@ def main(currencies, start_date):
                 start_date = validate_start_date(None, None, start_date_input)
                 break  #If validation successful, exit
             except click.BadParameter as e:
-                print(f"Invalid start date format. {e.message}")
+                print(f"\nInvalid period format. {e.message}")
 
 
     #For GMV set start and end dates according to user's choice (end date always today)
