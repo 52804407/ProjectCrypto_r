@@ -22,25 +22,8 @@ from portfolio_functions import (calculate_equal_weights,
                                  calculate_global_minimum_variance,
                                  calculate_value_weights)
 
-#Validation function for start_date
-def validate_start_date(ctx, param, value):
-    # Regular expression to match the format and extract parts
-    match = re.match(r"(\d+)([DWMY])$", value.upper())
-    if not match:
-        raise click.BadParameter("Start date must be in the format of <number><D/W/M/Y> (e.g., 31D, 12W, 6M, 1Y)")
-    
-    number, unit = int(match.group(1)), match.group(2)
-    # Validate the number based on the unit
-    if unit == "D" and not (1 <= number <= 365):
-        raise click.BadParameter("Days must be between 1 and 365")
-    elif unit == "W" and not (1 <= number <= 52):
-        raise click.BadParameter("Weeks must be between 1 and 52")
-    elif unit == "M" and not (1 <= number <= 12):
-        raise click.BadParameter("Months must be between 1 and 12")
-    elif unit == "Y" and not (1 <= number <= 3):
-        raise click.BadParameter("Years must be between 1 and 5")
-    
-    return value.upper()
+from date_functions import(validate_start_date,
+                           get_start_date_from_period)
 
 def get_portfolio_choice():
     print("Choose a portfolio:")
@@ -125,27 +108,15 @@ def main(currencies, start_date):
                 break  # If validation is successful, exit the loop
             except click.BadParameter as e:
                 print(f"Invalid start date format. {e.message}")
-        
-    #Function to extract start date from period
-    def get_start_date_from_period(period):
-        unit = period[-1]
-        quantity = int(period[:-1])
-        if unit == "D":
-            return datetime.now() - timedelta(days=quantity)
-        elif unit == "W":
-            return datetime.now() - timedelta(weeks=quantity)
-        elif unit == "M":
-            return datetime.now() - timedelta(days=30*quantity)
-        elif unit == "Y":
-            return datetime.now() - timedelta(days=365*quantity)
 
-    
+
     #Setting start and end dates to pass on for GMV according to user's choice (end date always today)
     start_date_dt = get_start_date_from_period(start_date)
     end_date_dt = datetime.now()
     start_date_str = start_date_dt.strftime("%Y-%m-%d")
     end_date_str = end_date_dt.strftime("%Y-%m-%d")
     
+
     #Choose the portfolio
     portfolio_choice = get_portfolio_choice()
     if portfolio_choice == 1:
@@ -158,6 +129,7 @@ def main(currencies, start_date):
         portfolio_percentages = calculate_global_minimum_variance(*currencies, start_date=start_date_str, end_date=end_date_str)
         portfolio_name = "Global Minimum Variance Portfolio"
 
+
     #Print the resulting portfolio
     print("\nYour portfolio percentages:")
     labels = []
@@ -168,6 +140,7 @@ def main(currencies, start_date):
         sizes.append(percentage)
     print("\n(Please close the generated pie chart to continue)")
 
+
     #Pie chart of resulting portfolio distribution
     fig1, ax1 = plt.subplots()
     ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
@@ -175,6 +148,7 @@ def main(currencies, start_date):
 
     plt.title(f"{portfolio_name} Distribution")
     plt.show()
+
 
     def get_daily_returns(portfolio_percentages, start_date):
         #First we need to check if the csv file already exists and is not empty
@@ -227,7 +201,7 @@ def main(currencies, start_date):
 
 
 
-
+    #Plot cumulative portfolio returns over time
     if not cumulative_returns.empty:
         cumulative_returns.plot(title="Portfolio Cumulative Returns Over Time")
         plt.xlabel("Date")
@@ -238,6 +212,7 @@ def main(currencies, start_date):
         plt.show()
     else:
         print("No data available to plot.")
+
 
     #Ask user if they want to compare another portfolio
     compare_another = input("\nWould you like to compare returns with another portfolio? (yes/no): ").strip().lower()
