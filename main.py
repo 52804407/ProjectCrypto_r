@@ -1,20 +1,8 @@
-# Importing libraries
-import yfinance as yf
-import pandas as pd
-import numpy as np
+# Importing libraries and functions from different files
 import matplotlib.pyplot as plt
-from requests import Request, Session
-from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json
-from dateutil import parser
-import pytz
-import subprocess
 import click
-import re
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
-
-from api_functions import (get_crypto_symbol)
 
 from slugs_mapping_tool import (crypto_mapping_top50)                           
 
@@ -30,7 +18,7 @@ from returns_functions import (get_daily_returns,
 
 def get_portfolio_choice():
     print("Choose a portfolio:")
-    print("1. Value Weighted (based on live market cap)")
+    print("1. Value Weighted (based on live market cap from API)")
     print("2. Equal Weighted")
     print("3. Global Minimum Variance (might yield equal weighted results in some cases)")
 
