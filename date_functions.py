@@ -18,7 +18,7 @@ def validate_start_date(ctx, param, value):
     elif unit == "M" and not (1 <= number <= 12):
         raise click.BadParameter("Months must be between 1 and 12")
     elif unit == "Y" and not (1 <= number <= 3):
-        raise click.BadParameter("Years must be between 1 and 5")
+        raise click.BadParameter("Years must be between 1 and 3")
     
     return value.upper()
 

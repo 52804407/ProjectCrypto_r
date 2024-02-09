@@ -54,5 +54,6 @@ Future enhancements of our project might include:
 - Further improve the data saving process across different runs of `main.py` to further reduce runtime by preventing downloads of overlapping data.
 - Add periodic portfolio rebalancing (e.g. every 2 weeks). For this, historical values of market caps are crucial. However, the free version of CoinMarketCap API provides only live data.
 - Optimization of API usage to reduce data retrieval times.
+- Add config option to allow users to personalize visualizations.
 
 **Authors: Sebastian Pasz and Tomáš Šamaj**
