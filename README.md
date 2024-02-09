@@ -55,4 +55,4 @@ Future enhancements of our project might include:
 - Add periodic portfolio rebalancing (e.g. every 2 weeks). For this, historical values of market caps are crucial. However, the free version of CoinMarketCap API provides only live data.
 - Optimization of API usage to reduce data retrieval times.
 
-## Authors: Sebastian Pasz and Tomáš Šamaj
+**Authors: Sebastian Pasz and Tomáš Šamaj**
