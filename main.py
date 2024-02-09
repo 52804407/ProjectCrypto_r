@@ -40,7 +40,7 @@ def get_portfolio_choice():
             if 1 <= choice <= 3:
                 return choice
             else:
-                print("Invalid choice. Please enter a number between 1 and 3.")
+                print("\nInvalid choice. Please enter a number between 1 and 3.")
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
@@ -174,38 +174,42 @@ def main(currencies, start_date):
 
 
     #Ask user if they want to compare another portfolio
-    compare_another = input("\nWould you like to compare returns with another portfolio? (yes/no): ").strip().lower()
-    cumulative_returns_2 = None #Begin with empty cumulative_returns_2
-    if compare_another == "yes": #If yes, repeat the portfolio selection process
-        portfolio_choice_2 = get_portfolio_choice()
-        if portfolio_choice_2 == 1:
-            portfolio_percentages_2 = calculate_value_weights(*currencies)
-            portfolio_name_2 = "Value-weighted Portfolio"
-        elif portfolio_choice_2 == 2:
-            portfolio_percentages_2 = calculate_equal_weights(*currencies)    
-            portfolio_name_2 = "Equal-weighted Portfolio"
-        elif portfolio_choice_2 == 3:
-            portfolio_percentages_2 = calculate_global_minimum_variance(*currencies, start_date=start_date_str, end_date=end_date_str)
-            portfolio_name_2 = "Global Minimum Variance Portfolio"
+    while True:  #Continue until valid input is received
+        compare_another = input("\nWould you like to compare returns with another portfolio? (yes/no): ").strip().lower()
 
-        #Calculate cumulative returns for the second portfolio
-        daily_returns_dict2 = get_daily_returns(portfolio_percentages_2, start_date)
-        cumulative_returns_2 = calculate_weighted_cumulative_returns(daily_returns_dict2, portfolio_percentages_2)
+        if compare_another == "yes":  #If "yes", repeat the portfolio selection process
+            portfolio_choice_2 = get_portfolio_choice()
+            if portfolio_choice_2 == 1:
+                portfolio_percentages_2 = calculate_value_weights(*currencies)
+                portfolio_name_2 = "Value-weighted Portfolio"
+            elif portfolio_choice_2 == 2:
+                portfolio_percentages_2 = calculate_equal_weights(*currencies)    
+                portfolio_name_2 = "Equal-weighted Portfolio"
+            elif portfolio_choice_2 == 3:
+                portfolio_percentages_2 = calculate_global_minimum_variance(*currencies, start_date=start_date_str, end_date=end_date_str)
+                portfolio_name_2 = "Global Minimum Variance Portfolio"
 
-    if not cumulative_returns.empty and cumulative_returns_2 is not None and not cumulative_returns_2.empty: #This covers the input "no"
+            #Calculate cumulative returns for the second portfolio
+            daily_returns_dict2 = get_daily_returns(portfolio_percentages_2, start_date)
+            cumulative_returns_2 = calculate_weighted_cumulative_returns(daily_returns_dict2, portfolio_percentages_2)
+            break  #Exit the loop
+
+        elif compare_another == "no":  #If "no", exit the process
+            break
+
+        else:  #If wrong input provided print error message and go back to beginning of loop
+            print("\nInvalid input. Please choose \"yes\" or \"no\".")
+            continue
+
+    #Plotting the second cumulative returns in the same graph, if compare_another == "yes"
+    if not cumulative_returns.empty and 'cumulative_returns_2' in locals() and not cumulative_returns_2.empty:
         plt.figure(figsize=(10, 6))
-        
-        #Plot the first portfolio
         cumulative_returns.plot(label=f'{portfolio_name}')
-        
-        #Plot the second portfolio on the same figure
         cumulative_returns_2.plot(label=f'{portfolio_name_2}')
-        
         plt.title("Comparison of Portfolio Performances Over Time")
         plt.xlabel("Date")
         plt.ylabel("Cumulative Returns")
         plt.legend()
-        #Grid of horizontal lines only
         plt.gca().yaxis.grid(True)
         plt.gca().xaxis.grid(False)
         plt.show()
