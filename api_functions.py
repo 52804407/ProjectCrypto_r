@@ -1,13 +1,6 @@
-import yfinance as yf
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from requests import Request, Session
-from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
+from requests import Session
 import json
 import configparser
-from dateutil import parser
-import pytz
 
 #Function that obtains cryptocurency market_cap in USD from coinmarketcap API
 def get_market_cap(slug ="bitcoin", id = 1): 
