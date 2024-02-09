@@ -16,9 +16,10 @@ def calculate_equal_weights(*currencies):
         percentages[currency] = equal_weight*100
     return percentages
 
-# Value_weighted portfolio (based on live market capitalization)
+
+# Value_weighted portfolio (based on live market capitalization from API)
 def calculate_value_weights(*currencies): 
-    # Get market cap for each currency
+    #Get market cap for each currency
     market_caps = {}
     for currency in currencies:
         try:
@@ -41,7 +42,7 @@ def calculate_value_weights(*currencies):
         return percentages
 
 
-#Global_minimum_variance portfolio
+#GMV portfolio
 def calculate_global_minimum_variance(*currencies, start_date, end_date):
     #Convert user input to ticker symbol
     currencies = convert_to_tickers(currencies, crypto_mapping_top50)

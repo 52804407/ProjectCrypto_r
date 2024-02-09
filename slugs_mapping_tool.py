@@ -51,14 +51,15 @@ crypto_mapping_top50 = {
     "vechain": "VET-USD"
 }
 
-
 #Function to convert user input (e.g. bitcoin) to ticker symbols (e.g. BTC-USD)
 def convert_to_tickers(user_input, mapping):
     return [mapping[currency.lower()] for currency in user_input if currency.lower() in mapping]
 
+
 #Inverse function to the function above (e.g. BTC-USD -> bitcoin)
 def convert_to_names(mapping):
     return {v: k for k, v in mapping.items()}
+
 
 #Control process to check if all keys are in list of slugs
 if __name__ == "__main__":
