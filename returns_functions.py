@@ -1,21 +1,10 @@
 import yfinance as yf
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from requests import Request, Session
-from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-import json
-from dateutil import parser
-import pytz
-import subprocess
-import click
-import re
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 
 from date_functions import (get_start_date_from_period)
 from api_functions import (get_crypto_symbol)
-
 
 #Function to download/load saved daily returns for each currency of the portfolio
 def get_daily_returns(portfolio_percentages, start_date):
