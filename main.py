@@ -285,5 +285,8 @@ def main(currencies, start_date):
         plt.gca().xaxis.grid(False)
         plt.show()
 
+    #Delete the csv file for saving daily return data
+    os.remove("saved_daily_return_data.csv")
+
 if __name__ == "__main__":
     main()
