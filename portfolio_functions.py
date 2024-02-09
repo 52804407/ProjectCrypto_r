@@ -1,12 +1,4 @@
-import yfinance as yf
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.optimize import minimize
-
-from api_functions import (get_crypto_slugs,
-                           portfolio_manager,
-                           get_crypto_ids,
+from api_functions import (get_crypto_ids,
                            get_crypto_symbol,
                            get_market_cap)
 

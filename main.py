@@ -14,11 +14,7 @@ import re
 from datetime import datetime, timedelta
 import os
 
-from api_functions import (get_crypto_slugs,
-                           portfolio_manager,
-                           get_crypto_ids,
-                           get_crypto_symbol,
-                           get_market_cap)
+from api_functions import (get_crypto_symbol)
 
 from slugs_mapping_tool import (crypto_mapping_top50)                           
 
