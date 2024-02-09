@@ -4,7 +4,7 @@
 - [Installation](#installation)
 - [Description](#description)
 - [Usage](#usage)
-- [Potential Future Improvements](#Potential-Future-Improvements)
+- [Potential Future Improvements](#potential-future-improvements-wish-list)
 
 ## Installation
 - Ensure you have the correct version of Python (specified in `requirements.txt` ) installed.
