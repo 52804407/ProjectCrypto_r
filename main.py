@@ -70,7 +70,7 @@ def get_portfolio_choice():
 @click.argument('currencies', nargs=-1)
 @click.option("--start_date", default="1M", callback=validate_start_date, show_default=True, help="Start date in the format of <number><D/W/M/Y>. Default is 1M.")
 
-def main(currencies, list_currencies, start_date):
+def main(currencies, start_date):
     
     #Input for currencies
     while True: #Continue until valid input is received
