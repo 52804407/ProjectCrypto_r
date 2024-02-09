@@ -18,11 +18,11 @@ This tool is designed to analyze returns of cryptocurrency portfolios using data
 The main features include:
 - Specifying a portfolio of user's choice (maximum of 5 currencies) or listing all available cryptocurrency slugs (TOP 50 cryptocurrencies by market cap).
 - Choosing a time period for the portfolio returns analysis (end date is set as `today`, i.e. the day on which the code is executed).
-- Calculating three types of portfolios: Value-Weighted (based on live market caps), Equal-Weighted, and Global Minimum Variance (with an initial guess of equal weights).__
+- Calculating three types of portfolios: Value-Weighted (based on live market caps), Equal-Weighted, and Global Minimum Variance (with an initial guess of equal weights).<br>
 _Note: As the covariance of various cryptocurrencies might be low in some portfolios, the GMV portfolio might yield equal weights, as it is the initial guess in the variance optimization process._
 - Visualizing portfolio percentages distributions in a pie chart.
 - Visualizing cumulative portfolio returns over time in a plot.
-- Comparing returns of different portfolio types over a specified time period.__
+- Comparing returns of different portfolio types over a specified time period.<br>
 _Note: Here we implement a data saving process to reduce runtime by preventing downloading the same data twice. Daily return data are saved in a temporary csv file._
 
 
