@@ -71,62 +71,68 @@ def get_portfolio_choice():
 @click.option("--start_date", default="1M", callback=validate_start_date, show_default=True, help="Start date in the format of <number><D/W/M/Y>. Default is 1M.")
 
 def main(currencies, start_date):
-    
-    #Input for currencies
-    while True: #Continue until valid input is received
+    while True:  # Continue until valid input is received
+        print("\nEnter up to 5 crypto slugs (e.g.: \"bitcoin ethereum solana\"), choose \"top3\" / \"top5\" by market cap or type \"list\" to list all available slugs") 
+        print("(Press Enter to skip and use default portfolio (top5))")
+        user_input = input().strip()
+        # Replace non-alphanumeric characters (except "-") with space
+        user_input = ''.join(char if char.isalnum() or char.isspace() or char == '-' else ' ' for char in user_input)
+        # Split the input into a list of cryptocurrencies
+        currencies = user_input.split()
+
+        # Add the list option to display all available slugs
+        if currencies == ["list"]:
+            available_slugs = list(crypto_mapping_top50.keys())
+            print("\nList of available crypto slugs:")
+            print(available_slugs)
+            continue  # Go back to the beginning of the loop    
+
+        # Restrict the maximum number of currencies to 5
+        if len(currencies) > 5:
+            print("\nA maximum of 5 cryptocurrencies is allowed.")
+            continue  # Go back to the beginning of the loop
+
+        # Default currencies if user skips
         if not currencies:
-            print("\nEnter up to 5 crypto slugs (e.g.: \"bitcoin ethereum solana\"), choose \"top3\" / \"top5\" by market cap or type \"list\" to list all available slugs") 
-            print("(Press Enter to skip and use default portfolio (top5))")
-            user_input = input().strip()
-            #Replace non-alphanumeric characters (except "-") with space
-            user_input = ''.join(char if char.isalnum() or char.isspace() or char == '-' else ' ' for char in user_input)
-            #Split the input into a list of cryptocurrencies
-            currencies = user_input.split()
+            currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
+            break
 
-            #Add the list option to display all available slugs
-            if currencies == ["list"]:
-                available_slugs = list(crypto_mapping_top50.keys())
-                print("\nList of available crypto slugs:")
-                print(available_slugs)
-                currencies = [] #Reset currencies
-                continue #Go back to the beginning of the loop    
+        # Add top3 choice
+        if currencies == ["top3"]:
+            currencies = ["bitcoin", "ethereum", "tether"]
+            break
 
-            #Restrict the maximum number of currencies to 5
-            if len(currencies) > 5:
-                print("\nA maximum of 5 cryptocurrencies is allowed.")
-                currencies = [] #Reset currencies
-                continue #Go back to the beginning of the loop
+        # Add top5 choice
+        if currencies == ["top5"]:
+            currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
+            break
 
-            #Default currencies if user skips
-            if not currencies:
-                currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
-                break
-            #Add top3 choice
-            if currencies == ["top3"]:
-                currencies = ["bitcoin", "ethereum", "tether"]
-                break
-            #Add top5 choice
-            if currencies == ["top5"]:
-                currencies = ["bitcoin", "ethereum", "tether", "bnb", "solana"]
-                break
-            
-            if currencies:
-                break    
+        # Check if all entered currencies are in the available crypto slugs
+        invalid_slugs = [slug for slug in currencies if slug not in crypto_mapping_top50.keys()]
+        if invalid_slugs:
+            print(f"\nInvalid slug(s): {', '.join(invalid_slugs)}. Please enter valid crypto slugs.")
+            continue  # Go back to the beginning of the loop to ask for input again
+
+        break  # Exit the loop if all inputs are valid    
 
     #Input for time period
     print("\nEnter time period (end date is today) in the format: <number><D/W/M/Y> (e.g.: \"5D\", \"1W\", \"6M\", \"1Y\")")
     print("(Press Enter to skip and use default period (1M))")
-    start_date_input = input().strip().upper()
-    #Default value if user skips
-    if not start_date_input:
-        start_date = "1M"  
-    else:
-        try:
-            # Validate the start_date format. Reuse the existing validate_start_date function.
-            start_date = validate_start_date(None, None, start_date_input)
-        except click.BadParameter as e:
-            print(f"Invalid start date format. {e.message}")
-            return  ### TO-DO: ASK FOR INPUT AGAIN
+    
+
+    while True:  # Loop until valid input is received
+        start_date_input = input().strip().upper()
+
+        if not start_date_input:
+            start_date = "1M"  # Default value if input is empty
+            break  # Exit the loop since a default value is considered valid
+        else:
+            try:
+                # Attempt to validate the start_date format using the existing function
+                start_date = validate_start_date(None, None, start_date_input)
+                break  # If validation is successful, exit the loop
+            except click.BadParameter as e:
+                print(f"Invalid start date format. {e.message}")
         
     #Function to extract start date from period
     def get_start_date_from_period(period):
