@@ -26,10 +26,6 @@ from portfolio_functions import (calculate_equal_weights,
                                  calculate_global_minimum_variance,
                                  calculate_value_weights)
 
-from yfinance_functions import (calculate_daily_returns,
-                                #get_daily_close_price_data,
-                                portfolio_manager_GMV)
-
 #Validation function for start_date
 def validate_start_date(ctx, param, value):
     # Regular expression to match the format and extract parts

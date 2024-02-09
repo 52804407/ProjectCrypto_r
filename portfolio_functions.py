@@ -14,9 +14,7 @@ from slugs_mapping_tool import (crypto_mapping_top50,
                                 convert_to_tickers,
                                 convert_to_names)
 
-from yfinance_functions import (calculate_daily_returns,
-                                #get_daily_close_price_data,
-                                portfolio_manager_GMV)
+from GMV_functions import (portfolio_manager_GMV)
 
 # Equal_weighted portfolio
 def calculate_equal_weights(*currencies):
