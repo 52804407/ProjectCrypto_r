@@ -15,6 +15,9 @@ def get_market_cap(slug ="bitcoin", id = 1):
         'Accepts': 'application/json',
         'X-CMC_PRO_API_KEY': api_key
     }
+
+
+    #kmsajndjasnd
     #Send the request and retrieve the response
     session = Session()
     session.headers.update(headers)
